@@ -2891,8 +2891,42 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
     bottomPanel.style.width = Math.round(TARGET_BOTTOM_WIDTH / scale) + 'px';
+    return scale;
   }
   scaleCanvas();
   window.addEventListener('resize', scaleCanvas);
+
+  // ===== TEMP DEBUG OVERLAY =====
+  const dbg = document.createElement('div');
+  dbg.id = 'debug-overlay';
+  Object.assign(dbg.style, {
+    position: 'fixed', top: '8px', left: '8px', zIndex: '999999',
+    background: 'rgba(0,0,0,0.82)', color: '#fff',
+    font: '11px/1.6 monospace', padding: '8px 10px',
+    borderRadius: '6px', pointerEvents: 'none', whiteSpace: 'pre',
+  });
+  document.body.appendChild(dbg);
+
+  function updateDebug() {
+    const scale = scaleCanvas();
+    const fr = document.getElementById('app-frame').getBoundingClientRect();
+    const cv = document.getElementById('app-canvas').getBoundingClientRect();
+    dbg.textContent =
+      `window:    ${window.innerWidth} x ${window.innerHeight}\n` +
+      `scale:     ${scale.toFixed(4)}\n` +
+      `\n` +
+      `#app-frame\n` +
+      `  top:     ${fr.top.toFixed(1)}\n` +
+      `  bottom:  ${fr.bottom.toFixed(1)}\n` +
+      `  height:  ${fr.height.toFixed(1)}\n` +
+      `\n` +
+      `#app-canvas (post-transform)\n` +
+      `  top:     ${cv.top.toFixed(1)}\n` +
+      `  bottom:  ${cv.bottom.toFixed(1)}\n` +
+      `  height:  ${cv.height.toFixed(1)}`;
+  }
+  updateDebug();
+  window.addEventListener('resize', updateDebug);
+  // ===== END TEMP DEBUG OVERLAY =====
 })();
 </script>
