@@ -31,6 +31,8 @@
     justify-content: center;
     background: transparent;
     overflow: hidden;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   #app-canvas {
     width: 1366px;
@@ -2887,7 +2889,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
     const scaleY = window.innerHeight / 984;
-    const scale = Math.min(scaleX, scaleY);
+    const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
     bottomPanel.style.width = Math.round(TARGET_BOTTOM_WIDTH / scale) + 'px';
