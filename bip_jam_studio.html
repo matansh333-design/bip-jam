@@ -31,8 +31,6 @@
     justify-content: center;
     background: transparent;
     overflow: hidden;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
   }
   #app-canvas {
     width: 1366px;
@@ -92,7 +90,7 @@
   }
   .bipjam-logo {
     position: absolute;
-    top: 18px;
+    top: calc(18px + env(safe-area-inset-top));
     left: 16px;
     width: 86px;
     height: 76px;
