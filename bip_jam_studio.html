@@ -116,6 +116,7 @@
     pointer-events: none;
     z-index: 160;
     transform: translate(2px, -22px);
+    will-change: transform;
   }
   .bipjam-hint {
     align-self: flex-start;
@@ -186,6 +187,7 @@
     width: 100%;
     height: 100%;
     display: block;
+    will-change: transform;
   }
 
   /* Separator */
@@ -207,6 +209,7 @@
   .tbar-metro img {
     position: absolute;
     display: block;
+    will-change: transform;
   }
 
   /* BPM group */
@@ -336,6 +339,7 @@
     width: 22px;
     height: 22px;
     flex: none;
+    will-change: transform;
   }
 
   .tweak-title {
@@ -541,7 +545,7 @@
     padding: 0 16px 14px;
     flex: none;
   }
-  .sidebar-header-icon { flex: none; }
+  .sidebar-header-icon { flex: none; will-change: transform; }
   .sidebar-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
     font-size: 26px;
