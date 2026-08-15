@@ -27,6 +27,7 @@
   #app-frame {
     position: fixed;
     inset: 0;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1730,8 +1731,7 @@ function rebuildScene(fitCamera) {
 
 // ---------- resize ----------
 function resize() {
-  const rect = viewport.getBoundingClientRect();
-  const w = rect.width, h = rect.height;
+  const w = viewport.clientWidth, h = viewport.clientHeight;
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h, false);
@@ -2888,11 +2888,10 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const bottomPanel = document.getElementById('bottom-panel');
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
   function scaleCanvas() {
-    const scaleX = 1180 / 1366;
-    const scaleY = 820 / 921.5;
+    const scaleX = window.innerWidth / 1366;
+    const scaleY = window.innerHeight / 921.5;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
-    if (typeof resize === 'function') resize();
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
     bottomPanel.style.width = Math.round(TARGET_BOTTOM_WIDTH / scale) + 'px';
     return scale;
