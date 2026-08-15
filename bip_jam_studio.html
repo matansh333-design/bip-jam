@@ -15,8 +15,8 @@
   html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
     /* Solid fallback so any residual gap shows blue, not white */
     background-color: #4C5FD9;
@@ -2889,7 +2889,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
-    const scaleY = 820 / 921.5;
+    const scaleY = window.innerHeight / 921.5;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
