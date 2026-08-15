@@ -18,6 +18,8 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
     /* Solid fallback so any residual gap shows blue, not white */
     background-color: #4C5FD9;
     background-image: radial-gradient(120% 140% at 30% 15%, #8FA0F7 0%, #6C7EEE 45%, #4C5FD9 100%);
@@ -1792,6 +1794,7 @@ function pickTile(clientX, clientY) {
 
 function onPointerDown(e) {
   if (e.target.closest('.bipjam-transport') || e.target.closest('.bipjam-palette-item') || e.target.closest('#bipjam-view-toggle')) return; // let UI controls handle their own clicks
+  e.preventDefault();
   viewport.setPointerCapture(e.pointerId);
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   moved = false;
@@ -1805,6 +1808,7 @@ function onPointerDown(e) {
   }
 }
 function onPointerMove(e) {
+  e.preventDefault();
   if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
   if (pointers.size === 2) {
@@ -1875,8 +1879,8 @@ function getPinchDist() {
 }
 function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
-viewport.addEventListener('pointerdown', onPointerDown);
-viewport.addEventListener('pointermove', onPointerMove);
+viewport.addEventListener('pointerdown', onPointerDown, { passive: false });
+viewport.addEventListener('pointermove', onPointerMove, { passive: false });
 viewport.addEventListener('pointerup', onPointerUp);
 viewport.addEventListener('pointercancel', onPointerUp);
 viewport.addEventListener('pointerleave', onPointerLeave);
