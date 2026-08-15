@@ -210,6 +210,8 @@
     position: absolute;
     display: block;
     will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   /* BPM group */
@@ -340,6 +342,8 @@
     height: 22px;
     flex: none;
     will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .tweak-title {
@@ -545,7 +549,7 @@
     padding: 0 16px 14px;
     flex: none;
   }
-  .sidebar-header-icon { flex: none; will-change: transform; }
+  .sidebar-header-icon { flex: none; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
   .sidebar-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
     font-size: 26px;
