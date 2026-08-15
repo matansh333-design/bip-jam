@@ -26,8 +26,10 @@
   /* ===== LETTERBOX WRAPPER ===== */
   #app-frame {
     position: fixed;
-    inset: 0;
-    height: 100dvh;
+    top: 0;
+    left: 0;
+    width: 1180px;
+    height: 820px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2888,8 +2890,8 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const bottomPanel = document.getElementById('bottom-panel');
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
   function scaleCanvas() {
-    const scaleX = window.innerWidth / 1366;
-    const scaleY = window.innerHeight / 921.5;
+    const scaleX = 1180 / 1366;
+    const scaleY = 820 / 921.5;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
