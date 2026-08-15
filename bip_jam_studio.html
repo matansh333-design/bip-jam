@@ -2889,7 +2889,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
-    const scaleY = document.documentElement.clientHeight / 921.5;
+    const scaleY = 820 / 921.5;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
