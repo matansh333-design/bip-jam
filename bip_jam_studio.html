@@ -769,7 +769,7 @@
   /* ===== BOTTOM PANEL ===== */
   .bottom-panel {
     position: absolute;
-    bottom: 16px; left: 50%;
+    bottom: 0; left: 50%;
     transform: translateX(-50%);
     width: 906px; /* fallback; overridden by JS to render at exactly 650px */
     flex-shrink: 0;
@@ -2897,24 +2897,5 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   }
   scaleCanvas();
   window.addEventListener('resize', scaleCanvas);
-
-  // ===== TEMP DEBUG =====
-  const dbg = document.createElement('div');
-  Object.assign(dbg.style, {
-    position: 'fixed', top: '8px', left: '8px', zIndex: '999999',
-    background: 'rgba(0,0,0,0.82)', color: '#fff',
-    font: '11px/1.5 monospace', padding: '5px 8px',
-    borderRadius: '4px', pointerEvents: 'none',
-  });
-  document.body.appendChild(dbg);
-  function updateDebug() {
-    const appFrameRect = document.getElementById('app-frame').getBoundingClientRect();
-    const bottomPanelRect = document.getElementById('bottom-panel').getBoundingClientRect();
-    const canvasRect = document.getElementById('app-canvas').getBoundingClientRect();
-    dbg.textContent = `bottom gap: ${(appFrameRect.bottom - bottomPanelRect.bottom).toFixed(1)}px | canvas bottom: ${canvasRect.bottom.toFixed(1)} | frame bottom: ${appFrameRect.bottom.toFixed(1)}`;
-  }
-  updateDebug();
-  window.addEventListener('resize', updateDebug);
-  // ===== END TEMP DEBUG =====
 })();
 </script>
