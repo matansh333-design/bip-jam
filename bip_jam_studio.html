@@ -27,6 +27,7 @@
   #app-frame {
     position: fixed;
     inset: 0;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2888,7 +2889,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
-    const scaleY = window.innerHeight / 921.5;
+    const scaleY = document.documentElement.clientHeight / 921.5;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
@@ -2912,8 +2913,10 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
     const bp = document.getElementById('bottom-panel').getBoundingClientRect();
     const ss = document.querySelector('.studio-sidebar').getBoundingClientRect();
     const tw = document.querySelector('.tweak-panel').getBoundingClientRect();
+    const dvh = document.documentElement.clientHeight;
     dbg.textContent =
-      `canvas.bottom=${cv.bottom.toFixed(1)} | bottom-panel.bottom=${bp.bottom.toFixed(1)} | studio-sidebar.bottom=${ss.bottom.toFixed(1)} | tweak-panel.bottom=${tw.bottom.toFixed(1)}`;
+      `innerHeight: ${window.innerHeight} | 100dvh: ${dvh}\n` +
+      `canvas.bottom=${cv.bottom.toFixed(1)} | bottom-panel.bottom=${bp.bottom.toFixed(1)} | sidebar.bottom=${ss.bottom.toFixed(1)} | tweak.bottom=${tw.bottom.toFixed(1)}`;
   }
   updateDebug();
   window.addEventListener('resize', updateDebug);
