@@ -680,6 +680,7 @@
     right: 35px;
     bottom: 15px;
     width: 169px;
+    height: 382px;
     background: #ffffff;
     border-radius: 25px;
     box-shadow:
@@ -691,6 +692,9 @@
     box-sizing: border-box;
     overflow: hidden;
     display: none;
+    flex-direction: column;
+    transform: scale(1.175);
+    transform-origin: bottom right;
   }
   .beat-block-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
@@ -4795,13 +4799,13 @@ function openBeatBlock(tileIndex) {
   applyBBSlider('pitch', 50);
   // Show beat block, hide tweak
   document.getElementById('tweak-panel').style.display = 'none';
-  document.getElementById('beat-block-panel').style.display = 'block';
+  document.getElementById('beat-block-panel').style.display = 'flex';
 }
 
 function closeBeatBlock() {
   selectedCellKey = null;
   document.getElementById('beat-block-panel').style.display = 'none';
-  document.getElementById('tweak-panel').style.display = 'block';
+  document.getElementById('tweak-panel').style.display = 'flex';
   document.querySelectorAll('.seq-cell.selected').forEach(c => c.classList.remove('selected'));
 }
 
