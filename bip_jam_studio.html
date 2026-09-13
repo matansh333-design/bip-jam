@@ -1286,7 +1286,7 @@
 </div>
 
 <button id="phone-play-btn" aria-label="Play">
-  <img src="assets/ui/play-icon.svg" alt="" />
+  <img src="assets/ui/play-bare.svg" alt="" />
 </button>
 
 <div id="app-frame">
@@ -5428,10 +5428,10 @@ function enableViewOnly() {
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       if (isPlaying) {
         stopPlayback();
-        phoneBtnImg.src = 'assets/ui/play-icon.svg';
+        phoneBtnImg.src = 'assets/ui/play-bare.svg';
       } else {
         startPlayback();
-        phoneBtnImg.src = 'assets/ui/stop-icon.svg';
+        phoneBtnImg.src = 'assets/ui/stop-bare.svg';
       }
     });
   }
