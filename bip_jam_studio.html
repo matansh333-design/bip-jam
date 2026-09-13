@@ -1114,7 +1114,10 @@
   #rotate-overlay {
     display: none;
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
     z-index: 999999;
     background: radial-gradient(120% 140% at 30% 15%, #8FA0F7 0%, #6C7EEE 45%, #4C5FD9 100%);
     flex-direction: column;
@@ -1124,7 +1127,7 @@
     color: #fff;
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
     text-align: center;
-    padding: 32px;
+    padding: calc(32px + env(safe-area-inset-top)) 32px calc(32px + env(safe-area-inset-bottom));
     box-sizing: border-box;
   }
   #rotate-overlay svg {
@@ -1151,7 +1154,7 @@
     <path d="M82 50a32 32 0 0 0-32-32" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
     <path d="M50 14l4 6h-8l4-6z" fill="#fff"/>
   </svg>
-  <p>סובבו את הטלפון לרוחב</p>
+  <p>Rotate your phone to landscape</p>
 </div>
 
 <div id="app-frame">
