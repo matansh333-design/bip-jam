@@ -307,27 +307,33 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     direction: rtl;
   }
-  /* ===== TWEAK PANEL ===== */
-  .tweak-panel {
+  /* ===== RIGHT PANEL WRAPPER (shared frame for Tweak & Beat Block) ===== */
+  .right-panel-wrap {
     position: absolute;
     right: 35px;
     bottom: 15px;
     width: 169px;
     height: 382px;
+    z-index: 200;
+    transform: scale(1.175);
+    transform-origin: bottom right;
+  }
+
+  /* ===== TWEAK PANEL ===== */
+  .tweak-panel {
+    position: absolute;
+    inset: 0;
     background: #ffffff;
     border-radius: 25px;
     box-shadow:
       0px 3.9px 3.1px 3.3px rgba(0,0,0,0.11),
       inset 0.5px -7.1px 1.8px 0px rgba(0,0,0,0.26);
     padding: 17px 16px 20px;
-    z-index: 200;
     user-select: none;
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transform: scale(1.175);
-    transform-origin: bottom right;
   }
 
   .tweak-header {
@@ -677,24 +683,18 @@
   /* ===== BEAT BLOCK PANEL ===== */
   .beat-block-panel {
     position: absolute;
-    right: 35px;
-    bottom: 15px;
-    width: 169px;
-    height: 382px;
+    inset: 0;
     background: #ffffff;
     border-radius: 25px;
     box-shadow:
       0px 3.9px 3.1px 3.3px rgba(0,0,0,0.11),
       inset 0.5px -7.1px 1.8px 0px rgba(0,0,0,0.26);
     padding: 17px 16px 20px;
-    z-index: 200;
     user-select: none;
     box-sizing: border-box;
     overflow: hidden;
     display: none;
     flex-direction: column;
-    transform: scale(1.175);
-    transform-origin: bottom right;
   }
   .beat-block-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
@@ -1112,8 +1112,7 @@
 
   /* ===== TIMELINE MODE: side panels shrink to avoid the taller bottom panel ===== */
   #app-canvas.timeline-mode .studio-sidebar,
-  #app-canvas.timeline-mode .tweak-panel,
-  #app-canvas.timeline-mode .beat-block-panel {
+  #app-canvas.timeline-mode .right-panel-wrap {
     bottom: 250px;  /* 0px panel offset + 250px panel height */
   }
 </style>
@@ -1188,6 +1187,9 @@
     <button class="bipjam-bars-opt" data-bars="12">12</button>
   </div>
 </div>
+
+<!-- ===== RIGHT PANEL WRAPPER ===== -->
+<div class="right-panel-wrap" id="right-panel-wrap">
 
 <!-- ===== TWEAK PANEL ===== -->
 <div class="tweak-panel" id="tweak-panel">
@@ -1392,6 +1394,8 @@
     </button>
   </div>
 </div>
+
+</div><!-- .right-panel-wrap -->
 
 <!-- ===== UNIFIED BOTTOM PANEL ===== -->
 <div class="bottom-panel" id="bottom-panel">
@@ -5236,7 +5240,7 @@ function enableViewOnly() {
   viewOnly = true;
   document.querySelector('.bottom-panel').style.display = 'none';
   document.querySelector('.studio-sidebar').style.display = 'none';
-  document.querySelector('.tweak-panel').style.display = 'none';
+  document.getElementById('right-panel-wrap').style.display = 'none';
   document.getElementById('tbar-actions').style.display = 'none';
 }
 
