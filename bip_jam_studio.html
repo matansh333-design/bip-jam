@@ -677,9 +677,8 @@
   /* ===== BEAT BLOCK PANEL ===== */
   .beat-block-panel {
     position: absolute;
-    right: 20px;
-    top: 110px;
-    bottom: 160px;
+    right: 35px;
+    bottom: 15px;
     width: 169px;
     background: #ffffff;
     border-radius: 25px;
@@ -5172,7 +5171,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
 // ===== BOTTOM PANEL TOGGLE =====
 (function initPanelToggle() {
   const panel = document.getElementById('bottom-panel');
-  const root  = document.querySelector('.bipjam-root');
+  const root  = document.querySelector('.bipjam-root') || document.createElement('div');
   const btnBrowser  = document.getElementById('toggle-browser-btn');
   const btnTimeline = document.getElementById('toggle-timeline-btn');
 
