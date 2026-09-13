@@ -1147,13 +1147,29 @@
     line-height: 1.5;
   }
 
-  /* --- View-only phone Play button (outside media query — controlled by JS) --- */
-  #phone-play-btn {
+  /* --- View-only phone toolbar (outside #app-canvas — controlled by JS) --- */
+  #phone-viewonly-bar {
     display: none;
     position: fixed;
     top: calc(8px + env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    height: 56px;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 0 calc(12px + env(safe-area-inset-left)) 0 calc(12px + env(safe-area-inset-right));
+    box-sizing: border-box;
+  }
+  #phone-viewonly-logo {
+    position: absolute;
+    left: calc(12px + env(safe-area-inset-left));
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+  #phone-play-btn {
+    display: block;
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -1163,18 +1179,38 @@
       0px 4px 12px rgba(0,0,0,0.18),
       inset 0.5px -2px 1.8px 0px rgba(0,0,0,0.26);
     cursor: pointer;
-    z-index: 10000;
-    padding: 8px;
+    padding: 14px;
     box-sizing: border-box;
     transition: opacity 0.15s;
+    flex: none;
   }
   #phone-play-btn:active { opacity: 0.7; }
   #phone-play-btn img {
     width: 100%;
     height: 100%;
     display: block;
-    border-radius: 50%;
   }
+  #phone-share-btn {
+    position: absolute;
+    right: calc(12px + env(safe-area-inset-right));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 22px;
+    border: none;
+    background: #ffb700;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a0800;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  #phone-share-btn:active { opacity: 0.7; }
 
   /* ===== MOBILE (phone: coarse pointer + small screen, excludes iPad) ===== */
   @media (pointer: coarse) and (max-height: 500px),
@@ -1285,9 +1321,18 @@
   <p>Rotate your phone to landscape</p>
 </div>
 
-<button id="phone-play-btn" aria-label="Play">
-  <img src="assets/ui/play-bare.svg" alt="" />
-</button>
+<div id="phone-viewonly-bar">
+  <img id="phone-viewonly-logo" src="assets/ui/logo.svg" alt="bip/jam" />
+  <button id="phone-play-btn" aria-label="Play">
+    <img src="assets/ui/play-bare.svg" alt="" />
+  </button>
+  <button id="phone-share-btn" aria-label="Share">
+    <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 0L9.5 3.5L8.45 4.55L6.75 2.85V8H5.25V2.85L3.55 4.55L2.5 3.5L6 0ZM1.5 12C1.0875 12 0.7345 11.853 0.441 11.56C0.1475 11.266 0 10.913 0 10.5V6.25H1.5V10.5H10.5V6.25H12V10.5C12 10.913 11.853 11.266 11.56 11.56C11.266 11.853 10.913 12 10.5 12H1.5Z" fill="#1a0800"/>
+    </svg>
+    Share
+  </button>
+</div>
 
 <div id="app-frame">
 <div id="app-canvas">
@@ -5419,11 +5464,12 @@ function enableViewOnly() {
   document.querySelector('.tweak-panel').style.display = 'none';
   document.getElementById('tbar-actions').style.display = 'none';
 
-  // Phone view-only: show dedicated Play button outside the canvas
+  // Phone view-only: show toolbar outside the canvas
   if (Math.min(screen.width, screen.height) < 500) {
+    var bar = document.getElementById('phone-viewonly-bar');
     var phoneBtn = document.getElementById('phone-play-btn');
     var phoneBtnImg = phoneBtn.querySelector('img');
-    phoneBtn.style.display = 'block';
+    bar.style.display = 'flex';
     phoneBtn.addEventListener('click', function() {
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       if (isPlaying) {
@@ -5432,6 +5478,16 @@ function enableViewOnly() {
       } else {
         startPlayback();
         phoneBtnImg.src = 'assets/ui/stop-bare.svg';
+      }
+    });
+    document.getElementById('phone-share-btn').addEventListener('click', function() {
+      var url = location.href;
+      if (navigator.share) {
+        navigator.share({ title: 'bip/jam', url: url });
+      } else {
+        navigator.clipboard.writeText(url).then(function() {
+          alert('Link copied!');
+        });
       }
     });
   }
