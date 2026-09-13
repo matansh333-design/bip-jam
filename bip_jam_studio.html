@@ -1147,8 +1147,37 @@
     line-height: 1.5;
   }
 
-  /* ===== MOBILE (phone, max-width 767px) ===== */
-  @media (max-width: 767px) {
+  /* --- View-only phone Play button (outside media query — controlled by JS) --- */
+  #phone-play-btn {
+    display: none;
+    position: fixed;
+    top: calc(8px + env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: #f0faff;
+    box-shadow:
+      0px 4px 12px rgba(0,0,0,0.18),
+      inset 0.5px -2px 1.8px 0px rgba(0,0,0,0.26);
+    cursor: pointer;
+    z-index: 10000;
+    padding: 0;
+    transition: opacity 0.15s;
+  }
+  #phone-play-btn:active { opacity: 0.7; }
+  #phone-play-btn img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+  }
+
+  /* ===== MOBILE (phone: coarse pointer + small screen, excludes iPad) ===== */
+  @media (pointer: coarse) and (max-height: 500px),
+         (pointer: coarse) and (max-width: 500px) {
     html {
       height: calc(100dvh + 1px);
       overflow-y: hidden;
@@ -1242,34 +1271,6 @@
     .tbar-circle-btn svg {
       width: 14px;
       height: 14px;
-    }
-
-    /* --- View-only phone Play button (lives outside #app-canvas) --- */
-    #phone-play-btn {
-      display: none;
-      position: fixed;
-      bottom: calc(24px + env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: none;
-      background: #f0faff;
-      box-shadow:
-        0px 4px 12px rgba(0,0,0,0.18),
-        inset 0.5px -2px 1.8px 0px rgba(0,0,0,0.26);
-      cursor: pointer;
-      z-index: 10000;
-      padding: 0;
-      transition: opacity 0.15s;
-    }
-    #phone-play-btn:active { opacity: 0.7; }
-    #phone-play-btn img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      border-radius: 50%;
     }
   }
 </style>
@@ -5392,7 +5393,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const canvas = document.getElementById('app-canvas');
   const bottomPanel = document.getElementById('bottom-panel');
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
-  const isPhone = window.matchMedia('(max-width: 767px)').matches;
+  const isPhone = Math.min(screen.width, screen.height) < 500;
   const REF_HEIGHT = isPhone ? 628 : 921.5;
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
@@ -5418,7 +5419,7 @@ function enableViewOnly() {
   document.getElementById('tbar-actions').style.display = 'none';
 
   // Phone view-only: show dedicated Play button outside the canvas
-  if (window.matchMedia('(max-width: 767px)').matches) {
+  if (Math.min(screen.width, screen.height) < 500) {
     var phoneBtn = document.getElementById('phone-play-btn');
     var phoneBtnImg = phoneBtn.querySelector('img');
     phoneBtn.style.display = 'block';
@@ -5544,7 +5545,7 @@ if (location.hash.length > 1) {
 (function() {
   if (viewOnly) return; // view-only mode works in both orientations
   var overlay = document.getElementById('rotate-overlay');
-  var mq = window.matchMedia('(max-width: 767px) and (orientation: portrait)');
+  var mq = window.matchMedia('(max-width: 500px) and (orientation: portrait)');
   function check(e) {
     overlay.style.display = (e.matches) ? 'flex' : 'none';
   }
@@ -5553,7 +5554,7 @@ if (location.hash.length > 1) {
 })();
 
 // ===== PHONE: auto-dismiss Safari bottom bar =====
-if (window.matchMedia('(max-width: 767px)').matches) {
+if (Math.min(screen.width, screen.height) < 500) {
   window.scrollTo(0, 1);
 }
 
