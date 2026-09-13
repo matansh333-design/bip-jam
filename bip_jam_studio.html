@@ -1170,6 +1170,10 @@
   }
   #phone-play-btn {
     display: block;
+    position: fixed;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -1182,7 +1186,7 @@
     padding: 10px;
     box-sizing: border-box;
     transition: opacity 0.15s;
-    flex: none;
+    z-index: 10000;
   }
   #phone-play-btn:active { opacity: 0.7; }
   #phone-play-btn img {
