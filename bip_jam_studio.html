@@ -2974,6 +2974,9 @@ function loadState(str) {
   }
 }
 
+window.serializeState = serializeState;
+window.loadState = loadState;
+
 // Auto-load from URL hash on page load
 if (location.hash.length > 1) {
   // Wait for GLB models to finish loading before restoring state
