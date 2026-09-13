@@ -1146,6 +1146,81 @@
     max-width: 260px;
     line-height: 1.5;
   }
+
+  /* ===== MOBILE TOP BAR (phone landscape, max-width 767px) ===== */
+  @media (max-width: 767px) {
+    .bipjam-logo {
+      width: 52px;
+      height: 46px;
+      top: calc(6px + env(safe-area-inset-top));
+      left: calc(8px + env(safe-area-inset-left));
+      transform: translate(0, 0);
+    }
+    .bipjam-transport-bar {
+      top: calc(6px + env(safe-area-inset-top));
+      height: 42px;
+      padding: 0 12px;
+      gap: 8px;
+      border-radius: 21px;
+    }
+    .tbar-play {
+      width: 30px;
+      height: 30px;
+    }
+    .tbar-skip {
+      padding: 2px;
+    }
+    .tbar-skip-icon {
+      width: 16px;
+      height: 16px;
+    }
+    .tbar-sep {
+      height: 22px;
+    }
+    .tbar-metro {
+      width: 16px;
+      height: 20px;
+    }
+    .tbar-bpm-num {
+      font-size: 11px;
+    }
+    .tbar-bpm-unit {
+      font-size: 8px;
+    }
+    .tbar-bpm-minus,
+    .tbar-bpm-plus {
+      font-size: 14px;
+      width: 18px;
+      height: 18px;
+    }
+    .tbar-actions {
+      top: calc(6px + env(safe-area-inset-top));
+      right: calc(8px + env(safe-area-inset-right));
+      height: 42px;
+      gap: 4px;
+    }
+    .tbar-send-btn {
+      height: 32px;
+      padding: 0 10px;
+      gap: 4px;
+      border-radius: 16px;
+    }
+    .tbar-send-label {
+      font-size: 10px;
+    }
+    .tbar-send-btn svg {
+      width: 10px;
+      height: 10px;
+    }
+    .tbar-circle-btn {
+      width: 32px;
+      height: 32px;
+    }
+    .tbar-circle-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
 </style>
 
 <div id="rotate-overlay">
@@ -1161,7 +1236,7 @@
 <div id="app-canvas">
 
 <div id="bipjam-viewport">
-  <div class="bipjam-loading" id="bipjam-loading">טוען משטח…</div>
+  <div class="bipjam-loading" id="bipjam-loading">Loading…</div>
 </div>
 
 <!-- ===== BIP LOGO (top-left, aligned with transport row) ===== -->
