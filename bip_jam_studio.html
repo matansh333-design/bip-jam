@@ -1156,76 +1156,92 @@
     #app-canvas {
       height: 628px;
     }
+
+    /* --- Top bar: pull out of canvas, use fixed viewport positioning --- */
     .bipjam-logo {
-      width: 52px;
-      height: 46px;
-      top: calc(6px + env(safe-area-inset-top));
-      left: calc(8px + env(safe-area-inset-left));
-      transform: translate(0, 0);
+      position: fixed;
+      top: calc(4px + env(safe-area-inset-top));
+      left: calc(6px + env(safe-area-inset-left));
+      width: 44px;
+      height: 38px;
+      transform: none;
+      z-index: 10000;
     }
     .bipjam-transport-bar {
-      top: calc(6px + env(safe-area-inset-top));
-      height: 42px;
-      padding: 0 12px;
+      position: fixed;
+      top: calc(4px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      height: 44px;
+      padding: 0 14px;
       gap: 8px;
-      border-radius: 21px;
+      border-radius: 22px;
+      z-index: 10000;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
     }
     .tbar-play {
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
     }
     .tbar-skip {
-      padding: 2px;
+      padding: 4px;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .tbar-skip-icon {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
     }
     .tbar-sep {
-      height: 22px;
+      height: 24px;
     }
     .tbar-metro {
       width: 16px;
       height: 20px;
     }
     .tbar-bpm-num {
-      font-size: 11px;
+      font-size: 12px;
     }
     .tbar-bpm-unit {
       font-size: 8px;
     }
     .tbar-bpm-minus,
     .tbar-bpm-plus {
-      font-size: 14px;
-      width: 18px;
-      height: 18px;
+      font-size: 16px;
+      min-width: 28px;
+      min-height: 28px;
     }
     .tbar-actions {
-      top: calc(6px + env(safe-area-inset-top));
-      right: calc(8px + env(safe-area-inset-right));
-      height: 42px;
+      position: fixed;
+      top: calc(4px + env(safe-area-inset-top));
+      right: calc(6px + env(safe-area-inset-right));
+      height: 44px;
       gap: 4px;
+      z-index: 10000;
     }
     .tbar-send-btn {
-      height: 32px;
-      padding: 0 10px;
-      gap: 4px;
-      border-radius: 16px;
+      height: 44px;
+      padding: 0 12px;
+      gap: 5px;
+      border-radius: 22px;
     }
     .tbar-send-label {
-      font-size: 10px;
+      font-size: 11px;
     }
     .tbar-send-btn svg {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
     }
     .tbar-circle-btn {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
     }
     .tbar-circle-btn svg {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
     }
   }
 </style>
