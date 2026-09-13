@@ -4881,8 +4881,9 @@ function applyBBSlider(id, pct) {
         const idx = parseInt(selectedCellKey);
         const el = placedElements.find(e => e.tileIndex === idx);
         if (el && ELEMENT_TYPES[newType]) {
-          el.type = newType;
-          rebuildScene(false);
+          // Remove old element, place new one — without rebuilding the whole scene
+          removeElementAt(idx);
+          placeElement(newType, idx);
           buildSeqGrid();
         }
       }
