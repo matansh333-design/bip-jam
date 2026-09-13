@@ -1110,7 +1110,49 @@
     text-align: center;
   }
 
+  /* ===== ROTATE PHONE OVERLAY ===== */
+  #rotate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: radial-gradient(120% 140% at 30% 15%, #8FA0F7 0%, #6C7EEE 45%, #4C5FD9 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    color: #fff;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    text-align: center;
+    padding: 32px;
+    box-sizing: border-box;
+  }
+  #rotate-overlay svg {
+    width: 80px;
+    height: 80px;
+    animation: rotate-hint 2s ease-in-out infinite;
+  }
+  @keyframes rotate-hint {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+  }
+  #rotate-overlay p {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    max-width: 260px;
+    line-height: 1.5;
+  }
 </style>
+
+<div id="rotate-overlay">
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="25" y="10" width="50" height="80" rx="8" stroke="#fff" stroke-width="4" fill="none"/>
+    <path d="M82 50a32 32 0 0 0-32-32" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M50 14l4 6h-8l4-6z" fill="#fff"/>
+  </svg>
+  <p>סובבו את הטלפון לרוחב</p>
+</div>
 
 <div id="app-frame">
 <div id="app-canvas">
@@ -5344,6 +5386,18 @@ if (location.hash.length > 1) {
     qrDiv.innerHTML = qr.createImgTag(6, 12);
     overlay.style.display = 'flex';
   });
+})();
+
+// ===== ROTATE PHONE OVERLAY =====
+(function() {
+  if (viewOnly) return; // view-only mode works in both orientations
+  var overlay = document.getElementById('rotate-overlay');
+  var mq = window.matchMedia('(max-width: 767px) and (orientation: portrait)');
+  function check(e) {
+    overlay.style.display = (e.matches) ? 'flex' : 'none';
+  }
+  mq.addEventListener('change', check);
+  check(mq);
 })();
 
 </script>
