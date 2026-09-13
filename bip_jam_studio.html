@@ -4237,6 +4237,8 @@ const elementAudioBuffers = {};
 function ensureAudio() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Resume immediately after creation, before any async work — required by iOS
+    if (audioCtx.state === 'suspended') audioCtx.resume();
     Object.entries(ELEMENT_TYPES).forEach(([key, type]) => {
       if (type.audio) {
         // Legacy b64-embedded audio
@@ -4340,7 +4342,11 @@ function startPlayback() {
   advancePlayhead();
 }
 
-playBtn.addEventListener('click', () => { isPlaying ? stopPlayback() : startPlayback(); });
+playBtn.addEventListener('click', () => {
+  // Resume AudioContext at the top of the user gesture — iOS requires this before any async work
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  isPlaying ? stopPlayback() : startPlayback();
+});
 bpmMinus.addEventListener('click', () => { bpm = Math.max(60, bpm - 4); bpmLabel.textContent = bpm; });
 bpmPlus.addEventListener('click',  () => { bpm = Math.min(200, bpm + 4); bpmLabel.textContent = bpm; });
 
