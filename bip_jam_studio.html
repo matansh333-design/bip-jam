@@ -1867,7 +1867,7 @@ function onPointerUp(e) {
     dragging = false;
     viewport.classList.remove('dragging');
     lastPinchDist = null;
-    if (!moved && !isPlaying) {
+    if (!moved && !isPlaying && !viewOnly) {
       const idx = pickTile(e.clientX, e.clientY);
       if (idx >= 0) {
         if (!removeElementAt(idx) && idx !== currentIndex) moveTo(idx);
@@ -2236,6 +2236,7 @@ function removeElementAt(tileIndex) {
 let dragPreviewIndex = -1;
 
 function startDrag(typeKey) {
+  if (viewOnly) return;
   function dragPointerMove(e) {
     e.preventDefault(); // prevent scroll on touch while dragging over viewport
     const rect = viewport.getBoundingClientRect();
@@ -2924,6 +2925,17 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   window.addEventListener('resize', scaleCanvas);
 })();
 
+// ===== VIEW-ONLY MODE =====
+let viewOnly = false;
+
+function enableViewOnly() {
+  viewOnly = true;
+  document.querySelector('.bottom-panel').style.display = 'none';
+  document.querySelector('.studio-sidebar').style.display = 'none';
+  document.querySelector('.tweak-panel').style.display = 'none';
+  document.getElementById('tbar-actions').style.display = 'none';
+}
+
 // ===== SERIALIZE / LOAD STATE =====
 const _typeKeys = Object.keys(ELEMENT_TYPES);
 const _typeToIdx = Object.fromEntries(_typeKeys.map((k, i) => [k, i]));
@@ -2979,9 +2991,15 @@ window.loadState = loadState;
 
 // Auto-load from URL hash on page load
 if (location.hash.length > 1) {
+  let hashData = location.hash.slice(1);
+  const isViewOnly = hashData.endsWith('~');
+  if (isViewOnly) hashData = hashData.slice(0, -1);
   // Wait for GLB models to finish loading before restoring state
   Promise.allSettled(
     Object.values(ELEMENT_TYPES).map(t => t._loadPromise).filter(Boolean)
-  ).then(() => loadState(location.hash.slice(1)));
+  ).then(() => {
+    loadState(hashData);
+    if (isViewOnly) enableViewOnly();
+  });
 }
 </script>
