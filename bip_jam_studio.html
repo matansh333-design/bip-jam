@@ -1149,6 +1149,10 @@
 
   /* ===== MOBILE (phone, max-width 767px) ===== */
   @media (max-width: 767px) {
+    html {
+      height: calc(100dvh + 1px);
+      overflow-y: hidden;
+    }
     #app-canvas {
       height: 628px;
     }
@@ -5482,5 +5486,10 @@ if (location.hash.length > 1) {
   mq.addEventListener('change', check);
   check(mq);
 })();
+
+// ===== PHONE: auto-dismiss Safari bottom bar =====
+if (window.matchMedia('(max-width: 767px)').matches) {
+  window.scrollTo(0, 1);
+}
 
 </script>
