@@ -1147,8 +1147,11 @@
     line-height: 1.5;
   }
 
-  /* ===== MOBILE TOP BAR (phone landscape, max-width 767px) ===== */
+  /* ===== MOBILE (phone, max-width 767px) ===== */
   @media (max-width: 767px) {
+    #app-canvas {
+      height: 628px;
+    }
     .bipjam-logo {
       width: 52px;
       height: 46px;
@@ -5337,9 +5340,11 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
   const canvas = document.getElementById('app-canvas');
   const bottomPanel = document.getElementById('bottom-panel');
   const TARGET_BOTTOM_WIDTH = 650; // desired rendered px width
+  const isPhone = window.matchMedia('(max-width: 767px)').matches;
+  const REF_HEIGHT = isPhone ? 628 : 921.5;
   function scaleCanvas() {
     const scaleX = window.innerWidth / 1366;
-    const scaleY = window.innerHeight / 921.5;
+    const scaleY = window.innerHeight / REF_HEIGHT;
     const scale = Math.max(scaleX, scaleY);
     canvas.style.transform = `scale(${scale})`;
     // Keep bottom panel at exactly TARGET_BOTTOM_WIDTH rendered px regardless of canvas scale
