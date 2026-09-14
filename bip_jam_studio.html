@@ -5467,6 +5467,11 @@ function enableViewOnly() {
   document.querySelector('.studio-sidebar').style.display = 'none';
   document.querySelector('.tweak-panel').style.display = 'none';
   document.getElementById('tbar-actions').style.display = 'none';
+  // On phone, also hide the moved transport bar (phone-viewonly-bar replaces it)
+  if (Math.min(screen.width, screen.height) < 500) {
+    document.querySelector('.bipjam-transport-bar').style.display = 'none';
+    document.querySelector('.bipjam-logo').style.display = 'none';
+  }
 
   // Phone view-only: show toolbar outside the canvas
   if (Math.min(screen.width, screen.height) < 500) {
@@ -5614,8 +5619,11 @@ if (location.hash.length > 1) {
   check(mq);
 })();
 
-// ===== PHONE: auto-dismiss Safari bottom bar =====
+// ===== PHONE: move top bar out of #app-canvas so position:fixed works =====
 if (Math.min(screen.width, screen.height) < 500) {
+  document.body.appendChild(document.getElementById('bipjam-logo'));
+  document.body.appendChild(document.getElementById('bipjam-transport-bar'));
+  document.body.appendChild(document.getElementById('tbar-actions'));
   window.scrollTo(0, 1);
 }
 
