@@ -1289,7 +1289,7 @@
       top: calc(4px + env(safe-area-inset-top));
       right: calc(12px + env(safe-area-inset-right));
       height: 44px;
-      gap: 4px;
+      gap: 8px;
       z-index: 10000;
     }
     .tbar-send-btn {
@@ -1312,6 +1312,167 @@
     .tbar-circle-btn svg {
       width: 14px;
       height: 14px;
+    }
+
+    /* --- Side panels: phone-sized, fixed positioning --- */
+    .studio-sidebar {
+      position: fixed;
+      left: calc(4px + env(safe-area-inset-left));
+      top: calc(54px + env(safe-area-inset-top));
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      width: 100px;
+      height: auto;
+      transform: none;
+      border-radius: 16px;
+      padding: 10px 0 8px;
+      z-index: 10000;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
+    }
+    .sidebar-header {
+      padding: 0 10px 8px;
+      gap: 6px;
+    }
+    .sidebar-header-icon {
+      width: 14px !important;
+      height: 16px !important;
+    }
+    .sidebar-title {
+      font-size: 16px;
+    }
+    .sidebar-divider {
+      margin: 0 8px;
+    }
+    .sidebar-nav {
+      padding: 4px 6px;
+      gap: 2px;
+    }
+    .sidebar-nav-item {
+      height: 36px;
+      padding: 0 6px;
+      border-radius: 8px;
+      gap: 6px;
+    }
+    .sidebar-nav-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .sidebar-nav-label {
+      font-size: 11px;
+    }
+
+    .tweak-panel,
+    .beat-block-panel {
+      position: fixed;
+      right: calc(4px + env(safe-area-inset-right));
+      top: calc(54px + env(safe-area-inset-top));
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      width: 110px;
+      height: auto;
+      transform: none;
+      border-radius: 16px;
+      padding: 10px 10px 12px;
+      z-index: 10000;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
+    }
+    .tweak-header {
+      margin-bottom: 8px;
+      gap: 5px;
+    }
+    .tweak-icon {
+      width: 16px;
+      height: 16px;
+    }
+    .tweak-title {
+      font-size: 14px;
+    }
+    .tweak-label {
+      font-size: 10px;
+    }
+    .tweak-pct {
+      font-size: 10px;
+      min-width: 28px;
+    }
+    .tweak-section {
+      margin-bottom: 2px;
+      gap: 3px;
+    }
+    .tweak-slider-row {
+      gap: 4px;
+    }
+    .tweak-loop-label {
+      font-size: 10px;
+    }
+    .tweak-loop-opt {
+      font-size: 10px;
+      padding: 3px 6px;
+    }
+
+    /* Beat block panel phone overrides */
+    .beat-block-title {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .bb-type-row {
+      margin-bottom: 6px;
+    }
+    .bb-type-label {
+      font-size: 10px;
+    }
+    .bb-type-select {
+      height: 26px;
+      padding: 0 8px;
+      font-size: 10px;
+    }
+    .bb-divider {
+      margin: 4px 0;
+    }
+    .bb-actions {
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .bb-btn {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+
+    /* --- Bottom palette: compact horizontal strip --- */
+    .bottom-panel {
+      position: fixed;
+      bottom: calc(4px + env(safe-area-inset-bottom));
+      left: calc(110px + env(safe-area-inset-left));
+      right: calc(120px + env(safe-area-inset-right));
+      width: auto;
+      height: 68px;
+      transform: none;
+      border-radius: 16px;
+      z-index: 10000;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
+    }
+    .panel-toggle {
+      width: 50px;
+      padding: 6px 4px;
+      gap: 4px;
+    }
+    .panel-toggle-btn {
+      width: 38px;
+      height: 28px;
+      border-radius: 6px;
+    }
+    .panel-toggle-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+    .palette-item-card {
+      width: 52px;
+      height: 56px;
+      border-radius: 8px;
+    }
+    .palette-item-label {
+      font-size: 7px;
+      margin-top: 2px;
+    }
+    .palette-scroll-btn {
+      width: 20px;
     }
   }
 </style>
@@ -5467,10 +5628,13 @@ function enableViewOnly() {
   document.querySelector('.studio-sidebar').style.display = 'none';
   document.querySelector('.tweak-panel').style.display = 'none';
   document.getElementById('tbar-actions').style.display = 'none';
-  // On phone, also hide the moved transport bar (phone-viewonly-bar replaces it)
+  // On phone, hide all moved UI (phone-viewonly-bar replaces it)
   if (Math.min(screen.width, screen.height) < 500) {
     document.querySelector('.bipjam-transport-bar').style.display = 'none';
     document.querySelector('.bipjam-logo').style.display = 'none';
+    document.querySelector('.studio-sidebar').style.display = 'none';
+    document.getElementById('tweak-panel').style.display = 'none';
+    document.getElementById('bottom-panel').style.display = 'none';
   }
 
   // Phone view-only: show toolbar outside the canvas
@@ -5635,11 +5799,15 @@ if (location.hash.length > 1) {
   check(mq);
 })();
 
-// ===== PHONE: move top bar out of #app-canvas so position:fixed works =====
+// ===== PHONE: move UI out of #app-canvas so position:fixed works =====
 if (Math.min(screen.width, screen.height) < 500) {
   document.body.appendChild(document.getElementById('bipjam-logo'));
   document.body.appendChild(document.getElementById('bipjam-transport-bar'));
   document.body.appendChild(document.getElementById('tbar-actions'));
+  document.body.appendChild(document.querySelector('.studio-sidebar'));
+  document.body.appendChild(document.getElementById('tweak-panel'));
+  document.body.appendChild(document.getElementById('beat-block-panel'));
+  document.body.appendChild(document.getElementById('bottom-panel'));
   window.scrollTo(0, 1);
 }
 
