@@ -1287,7 +1287,7 @@
     .tbar-actions {
       position: fixed;
       top: calc(4px + env(safe-area-inset-top));
-      right: calc(6px + env(safe-area-inset-right));
+      right: calc(12px + env(safe-area-inset-right));
       height: 44px;
       gap: 4px;
       z-index: 10000;
@@ -5597,14 +5597,30 @@ if (location.hash.length > 1) {
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 
-  document.getElementById('tbar-send-btn').addEventListener('click', function() {
-    var url = location.origin + location.pathname + '#' + serializeState() + '~';
-    var qr = qrcode(0, 'M');
-    qr.addData(url);
-    qr.make();
-    qrDiv.innerHTML = qr.createImgTag(6, 12);
-    overlay.style.display = 'flex';
-  });
+  var sendBtn = document.getElementById('tbar-send-btn');
+  if (Math.min(screen.width, screen.height) < 500) {
+    // Phone: change label & icon to "Share" and use Web Share API
+    sendBtn.querySelector('.tbar-send-label').textContent = 'Share';
+    sendBtn.querySelector('svg').innerHTML = '<path d="M6 0L9.5 3.5L8.45 4.55L6.75 2.85V8H5.25V2.85L3.55 4.55L2.5 3.5L6 0ZM1.5 12C1.0875 12 0.7345 11.853 0.441 11.56C0.1475 11.266 0 10.913 0 10.5V6.25H1.5V10.5H10.5V6.25H12V10.5C12 10.913 11.853 11.266 11.56 11.56C11.266 11.853 10.913 12 10.5 12H1.5Z" fill="#121212"/>';
+    sendBtn.addEventListener('click', function() {
+      var url = location.origin + location.pathname + '#' + serializeState() + '~';
+      if (navigator.share) {
+        navigator.share({ title: 'bip/jam', url: url });
+      } else {
+        navigator.clipboard.writeText(url).then(function() { alert('Link copied!'); });
+      }
+    });
+  } else {
+    // iPad: QR code modal
+    sendBtn.addEventListener('click', function() {
+      var url = location.origin + location.pathname + '#' + serializeState() + '~';
+      var qr = qrcode(0, 'M');
+      qr.addData(url);
+      qr.make();
+      qrDiv.innerHTML = qr.createImgTag(6, 12);
+      overlay.style.display = 'flex';
+    });
+  }
 })();
 
 // ===== ROTATE PHONE OVERLAY =====
