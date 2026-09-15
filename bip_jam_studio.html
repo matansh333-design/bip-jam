@@ -5084,8 +5084,10 @@ let bpm = 120;
 let isPlaying = false;
 let playheadCol = -1;
 let lastStepAt = 0;
+let nextStepAudioTime = 0; // audioCtx.currentTime of the next scheduled step
 
 function stepDurationMs() { return 60000 / bpm; } // each column IS a quarter note
+function stepDurationSec() { return 60 / bpm; }
 
 // ---------- audio: metronome click (synthesized) + per-element samples ----------
 let audioCtx = null;
@@ -5179,7 +5181,7 @@ function loadInstrumentAudio() {
   });
 }
 
-function playInstrumentPhrase(typeKey, barIndex) {
+function playInstrumentPhrase(typeKey, barIndex, atTime) {
   if (!audioCtx) return;
   const theme = TILE_STYLES[currentTileStyleIdx].name.toLowerCase();
   const buffers = instrumentBuffers[typeKey];
@@ -5194,7 +5196,7 @@ function playInstrumentPhrase(typeKey, barIndex) {
   gain.gain.value = 0.85;
   src.connect(gain);
   gain.connect(audioCtx.destination);
-  src.start(0);
+  src.start(atTime || 0);
 }
 
 function setColumnHighlight(col, on) {
@@ -5205,6 +5207,9 @@ function advancePlayhead() {
   if (playheadCol >= 0) setColumnHighlight(playheadCol, false);
   playheadCol = (playheadCol + 1) % GRID_COLS;
   setColumnHighlight(playheadCol, true);
+  // Schedule this step at precise audio time
+  var stepTime = nextStepAudioTime;
+  nextStepAudioTime += stepDurationSec();
   playClick(playheadCol % BAR_SIZE === 0);
   const currentBar = Math.floor(playheadCol / BAR_SIZE);
   placedElements.forEach(el => {
@@ -5214,7 +5219,7 @@ function advancePlayhead() {
       // Instruments: trigger when playhead enters the bar the instrument is in
       if (playheadCol % BAR_SIZE === 0 && Math.floor(elCol / BAR_SIZE) === currentBar) {
         el.hitAt = performance.now();
-        playInstrumentPhrase(el.type, currentBar);
+        playInstrumentPhrase(el.type, currentBar, stepTime);
       }
     } else if (elCol === playheadCol) {
       el.hitAt = performance.now();
@@ -5252,6 +5257,7 @@ function startPlayback() {
   document.querySelector('.tbar-play-circle').src = 'assets/ui/stop-icon.svg';
   lastStepAt = performance.now();
   playheadCol = -1;
+  nextStepAudioTime = audioCtx ? audioCtx.currentTime : 0;
   advancePlayhead();
 }
 
@@ -5555,6 +5561,7 @@ setTimeout(() => loadingEl.remove(), 400);
     if (id === 'bpm') {
       bpm = Math.round(120 + s.pct * 0.8);
       bpmLabel.textContent = bpm;
+      s.label.textContent = bpm + ' BPM';
     }
     if (id === 'vol') {
       ensureMasterGain();
