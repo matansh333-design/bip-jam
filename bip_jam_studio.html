@@ -845,14 +845,16 @@
     background: #6220f9;
     box-shadow: inset 0px 0.57px 0.912px 0px rgba(244,244,244,0.25), inset 0px -1.14px 0.855px 0px rgba(0,0,0,0.25);
   }
-  .panel-toggle-btn img {
+  .panel-toggle-btn .toggle-icon-active,
+  .panel-toggle-btn .toggle-icon-inactive {
     width: 24px; height: 24px;
     display: block;
     object-fit: contain;
   }
-  .panel-toggle-btn.active img {
-    filter: brightness(0) invert(1);
-  }
+  .panel-toggle-btn .toggle-icon-active { display: none; }
+  .panel-toggle-btn .toggle-icon-inactive { display: block; }
+  .panel-toggle-btn.active .toggle-icon-active { display: block; }
+  .panel-toggle-btn.active .toggle-icon-inactive { display: none; }
 
   /* ——— browser panel (state 1) ——— */
   .panel-browser {
@@ -1474,7 +1476,8 @@
       height: 28px;
       border-radius: 6px;
     }
-    .panel-toggle-btn svg {
+    .panel-toggle-btn .toggle-icon-active,
+    .panel-toggle-btn .toggle-icon-inactive {
       width: 14px;
       height: 14px;
     }
@@ -1566,7 +1569,7 @@
   <!-- Metronome icon + BPM text -->
   <div class="tbar-bpm-group">
     <div class="tbar-metro">
-      <img src="assets/ui/metronom.svg" alt="" style="width:100%;height:100%;" />
+      <img src="assets/ui/metronom.png" alt="" style="width:100%;height:100%;" />
     </div>
     <div class="tbar-bpm-text">
       <span class="tbar-bpm-num" id="bipjam-bpm-label">120</span>
@@ -1589,7 +1592,7 @@
 <!-- ===== TWEAK PANEL ===== -->
 <div class="tweak-panel" id="tweak-panel">
   <div class="tweak-header">
-    <img class="tweak-icon" src="assets/ui/tweak-icon.svg" alt="" />
+    <img class="tweak-icon" src="assets/ui/tweak-icon.png" alt="" />
     <span class="tweak-title">Tweak</span>
   </div>
   <div class="tweak-body">
@@ -1658,7 +1661,7 @@
 <div class="studio-sidebar" id="studio-sidebar">
   <!-- Header: music note icon + Studio label -->
   <div class="sidebar-header">
-    <img class="sidebar-header-icon" src="assets/ui/studio-icon.svg" alt="" width="18" height="20" />
+    <img class="sidebar-header-icon" src="assets/ui/studio-icon.png" alt="" width="18" height="20" />
     <span class="sidebar-title">Studio</span>
   </div>
   <div class="sidebar-divider"></div>
@@ -1717,9 +1720,7 @@
     <span class="bb-type-label">Type</span>
     <div class="bb-type-select" id="bb-type-select">
       <span class="bb-type-value" id="bb-type-value">Drum</span>
-      <img class="bb-type-chevron"
-           src="https://www.figma.com/api/mcp/asset/c38882f2-6393-4fb1-9f6f-81ecc0d84a03.svg"
-           alt="" onerror="this.outerHTML='▾'" />
+      <span class="bb-type-chevron">▾</span>
       <div class="bb-type-dropdown" id="bb-type-dropdown">
         <div class="bb-type-opt" data-type="drum">Drum</div>
         <div class="bb-type-opt" data-type="tree">Tree</div>
@@ -1777,16 +1778,8 @@
   </div>
 
   <div class="bb-actions">
-    <button class="bb-btn bb-btn-dup" id="bb-dup-btn">
-      <img src="https://www.figma.com/api/mcp/asset/0bcd2e8d-dbd5-432c-9f18-f3b56bc98c2c.svg"
-           alt="" onerror="this.style.display='none'" />
-      Dupe
-    </button>
-    <button class="bb-btn bb-btn-del" id="bb-del-btn">
-      <img src="https://www.figma.com/api/mcp/asset/a29ec281-2363-4d1f-af0b-cec0ef70d77c.svg"
-           alt="" onerror="this.style.display='none'" />
-      Delete
-    </button>
+    <button class="bb-btn bb-btn-dup" id="bb-dup-btn">Dupe</button>
+    <button class="bb-btn bb-btn-del" id="bb-del-btn">Delete</button>
   </div>
 </div>
 
@@ -1796,19 +1789,12 @@
   <!-- Toggle buttons -->
   <div class="panel-toggle" id="panel-toggle">
     <button class="panel-toggle-btn active" id="toggle-browser-btn" title="Element Browser">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="7" height="7" rx="2" fill="#6220F9"/>
-        <rect x="12" y="1" width="7" height="7" rx="2" fill="#6220F9"/>
-        <rect x="1" y="12" width="7" height="7" rx="2" fill="#6220F9"/>
-        <rect x="12" y="12" width="7" height="7" rx="2" fill="#6220F9"/>
-      </svg>
+      <img class="toggle-icon-active" src="assets/ui/browser-white.png" alt="" />
+      <img class="toggle-icon-inactive" src="assets/ui/browser-purple.png" alt="" />
     </button>
     <button class="panel-toggle-btn" id="toggle-timeline-btn" title="Timeline Editor">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="2" width="18" height="3" rx="1.5" fill="#6220F9"/>
-        <rect x="1" y="8.5" width="18" height="3" rx="1.5" fill="#6220F9"/>
-        <rect x="1" y="15" width="18" height="3" rx="1.5" fill="#6220F9"/>
-      </svg>
+      <img class="toggle-icon-active" src="assets/ui/timeline-white.png" alt="" />
+      <img class="toggle-icon-inactive" src="assets/ui/timeline-purple.png" alt="" />
     </button>
   </div>
 
@@ -5346,9 +5332,9 @@ function applyBBSlider(id, pct) {
 
 // ===== 2D STEP SEQUENCER GRID =====
 const ELEM_THUMBS = {
-  drum:     'https://www.figma.com/api/mcp/asset/7d960246-7b3a-4db9-bb44-267404bf1ac0.png',
-  tree:     'https://www.figma.com/api/mcp/asset/37b7d45e-3193-4ff1-934c-fb1869aed38d.png',
-  triangle: 'https://www.figma.com/api/mcp/asset/7ee7b35b-52c1-4e1b-ba58-6b7caa9cb5f4.png',
+  drum:     'assets/elements/drum/thumb.png',
+  tree:     'assets/elements/tree/thumb.png',
+  triangle: 'assets/elements/triangle/thumb.png',
   crab:       'assets/elements/crab/thumb.png',
   turtle:     'assets/elements/turtle/thumb.png',
   camel:      'assets/elements/camel/thumb.png',
@@ -5529,9 +5515,9 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
     { type: 'cactus1',      label: 'Cactus 1',     thumb: ELEM_THUMBS.cactus1,      enabled: true, themes: ['desert'] },
     { type: 'cactus2',      label: 'Cactus 2',     thumb: ELEM_THUMBS.cactus2,      enabled: true, themes: ['desert'] },
     { type: 'cactus3',      label: 'Cactus 3',     thumb: ELEM_THUMBS.cactus3,      enabled: true, themes: ['desert'] },
-    { type: 'maracas',   label: 'Maracas',  thumb: 'https://www.figma.com/api/mcp/asset/bf3c2c30-ef3f-4d95-b890-3780a181ac23.png', enabled: false },
-    { type: 'mushroom',  label: 'Mushroom', thumb: 'https://www.figma.com/api/mcp/asset/aba5199d-d706-4e40-83f9-b91f70cc1692.png', enabled: false },
-    { type: 'forest',    label: 'Forest',   thumb: 'https://www.figma.com/api/mcp/asset/56167349-e876-4406-9a39-4160441a6f96.png', enabled: false },
+    { type: 'maracas',   label: 'Maracas',  thumb: '', enabled: false },
+    { type: 'mushroom',  label: 'Mushroom', thumb: '', enabled: false },
+    { type: 'forest',    label: 'Forest',   thumb: '', enabled: false },
   ];
 
   const CARD_W = 68; // 62px card + 6px gap
