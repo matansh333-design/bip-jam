@@ -5120,6 +5120,7 @@ function ensureAudio() {
         xhr.send();
       }
     });
+    loadInstrumentAudio();
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
@@ -5149,6 +5150,53 @@ function playClick(accent) {
   osc.stop(now + 0.1);
 }
 
+// ---------- instrument (bar-length phrase) audio ----------
+const instrumentBuffers = {}; // instrumentBuffers[typeKey][theme][barIdx] = AudioBuffer
+const THEMES_LIST = ['green', 'desert', 'ice', 'beach'];
+
+function loadInstrumentAudio() {
+  Object.entries(ELEMENT_TYPES).forEach(([key, type]) => {
+    if (!type.isInstrument || !type.instrumentPath) return;
+    instrumentBuffers[key] = {};
+    THEMES_LIST.forEach(theme => {
+      instrumentBuffers[key][theme] = [];
+      for (let b = 0; b < 4; b++) {
+        const url = type.instrumentPath + '/' + theme + '/' + key + (b + 1) + '.mp3';
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = () => {
+          if ((xhr.status === 200 || xhr.status === 0) && audioCtx) {
+            audioCtx.decodeAudioData(xhr.response)
+              .then(decoded => { instrumentBuffers[key][theme][b] = decoded; })
+              .catch(() => {});
+          }
+        };
+        xhr.onerror = () => {};
+        xhr.send();
+      }
+    });
+  });
+}
+
+function playInstrumentPhrase(typeKey, barIndex) {
+  if (!audioCtx) return;
+  const theme = TILE_STYLES[currentTileStyleIdx].name.toLowerCase();
+  const buffers = instrumentBuffers[typeKey];
+  if (!buffers) return;
+  // Try current theme, fall back to green
+  const buf = (buffers[theme] && buffers[theme][barIndex]) || (buffers.green && buffers.green[barIndex]);
+  if (!buf) return;
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.playbackRate.value = bpm / 120;
+  const gain = audioCtx.createGain();
+  gain.gain.value = 0.85;
+  src.connect(gain);
+  gain.connect(audioCtx.destination);
+  src.start(0);
+}
+
 function setColumnHighlight(col, on) {
   for (let row = 0; row < GRID_ROWS; row++) setCurrentState(row * GRID_COLS + col, on);
 }
@@ -5158,8 +5206,17 @@ function advancePlayhead() {
   playheadCol = (playheadCol + 1) % GRID_COLS;
   setColumnHighlight(playheadCol, true);
   playClick(playheadCol % BAR_SIZE === 0);
+  const currentBar = Math.floor(playheadCol / BAR_SIZE);
   placedElements.forEach(el => {
-    if (el.tileIndex % GRID_COLS === playheadCol) {
+    const elCol = el.tileIndex % GRID_COLS;
+    const type = ELEMENT_TYPES[el.type];
+    if (type && type.isInstrument) {
+      // Instruments: trigger when playhead enters the bar the instrument is in
+      if (playheadCol % BAR_SIZE === 0 && Math.floor(elCol / BAR_SIZE) === currentBar) {
+        el.hitAt = performance.now();
+        playInstrumentPhrase(el.type, currentBar);
+      }
+    } else if (elCol === playheadCol) {
       el.hitAt = performance.now();
       playElementSound(el.type);
     }
@@ -5253,6 +5310,7 @@ const ELEMENT_TYPES = {
   cactus1:      { emoji: '🌵', label: 'קקטוס 1',  glbPath: 'assets/elements/cactus1/model.glb',    audioPath: 'assets/elements/cactus1/audio.wav',      audioOffset: 0, scale: 1, rotationY: 0 },
   cactus2:      { emoji: '🌵', label: 'קקטוס 2',  glbPath: 'assets/elements/cactus2/model.glb',    audioPath: 'assets/elements/cactus2/audio.wav',      audioOffset: 0, scale: 1, rotationY: 0 },
   cactus3:      { emoji: '🌵', label: 'קקטוס 3',  glbPath: 'assets/elements/cactus3/model.glb',    audioPath: 'assets/elements/cactus3/audio.wav',      audioOffset: 0, scale: 1, rotationY: 0 },
+  piano:        { emoji: '🎹', label: 'Piano',    data: CUBE_DATA.drum,     isInstrument: true, instrumentPath: 'assets/instruments/piano', audioOffset: 0, scale: 1, rotationY: 0 },
 };
 
 Object.entries(ELEMENT_TYPES).forEach(([key, type]) => {
@@ -5628,8 +5686,10 @@ function applyTileStyle(idx) {
       items.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
       // Toggle mode on the bottom panel
+      activeSidebarTab = item.dataset.tab;
       bottomPanel.classList.toggle('style-mode', item.dataset.tab === 'style');
       bottomPanel.classList.toggle('effects-mode', item.dataset.tab === 'effects');
+      renderPalette();
     });
   });
 
@@ -5808,6 +5868,7 @@ const ELEM_THUMBS = {
   cactus1:      'assets/elements/cactus1/thumb.png',
   cactus2:      'assets/elements/cactus2/thumb.png',
   cactus3:      'assets/elements/cactus3/thumb.png',
+  piano:        'assets/instruments/piano/thumb.png',
 };
 
 function buildSeqGrid() {
@@ -5945,6 +6006,7 @@ let _lastPlayheadCol = -1;
 
 // ===== BOTTOM PALETTE =====
 let currentPaletteType = 'drum';
+let activeSidebarTab = 'beat'; // 'beat' | 'instrument' | 'style' | 'effects'
 let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
 
 (function initBottomPalette() {
@@ -5970,6 +6032,7 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
     { type: 'parasol',    label: 'Parasol',    thumb: ELEM_THUMBS.parasol,    enabled: true, themes: ['beach'] },
     { type: 'camel',      label: 'Camel',      thumb: ELEM_THUMBS.camel,      enabled: true, themes: ['desert'] },
     { type: 'polar_bear', label: 'Polar Bear', thumb: ELEM_THUMBS.polar_bear, enabled: true, themes: ['ice'] },
+    { type: 'piano',      label: 'Piano',      thumb: ELEM_THUMBS.piano,      enabled: true, isInstrument: true },
   ];
 
   const CARD_W = 68; // 62px card + 6px gap
@@ -5981,7 +6044,12 @@ let renderPalette = () => {}; // forward-declared so applyTileStyle can call it
     itemsEl.innerHTML = '';
     const activeTheme = TILE_STYLES[currentTileStyleIdx].name.toLowerCase();
     const isFiltered = activeTheme === 'desert' || activeTheme === 'ice' || activeTheme === 'beach';
-    PALETTE_ITEMS.filter(item => !isFiltered || (item.themes && item.themes.includes(activeTheme))).forEach(item => {
+    const showInstruments = activeSidebarTab === 'instrument';
+    PALETTE_ITEMS.filter(item => {
+      if (showInstruments) return !!item.isInstrument;
+      if (item.isInstrument) return false;
+      return !isFiltered || (item.themes && item.themes.includes(activeTheme));
+    }).forEach(item => {
       const card = document.createElement('div');
       card.className = 'palette-item-card' +
         (item.type === currentPaletteType ? ' active' : '') +
