@@ -6198,7 +6198,7 @@ if (location.hash.length > 1) {
 
   // Subtitle
   var subtitle = document.createElement('div');
-  subtitle.textContent = 'Scan the QR code or choose a format to send your jam.';
+  subtitle.textContent = 'Scan the QR code and send it to your friends';
   Object.assign(subtitle.style, {
     fontFamily: "\'TeX Gyre Adventor\', \'Josefin Sans\', system-ui, sans-serif",
     fontSize: '15px', fontWeight: '700', color: '#313131', marginBottom: '18px',
@@ -6275,7 +6275,7 @@ if (location.hash.length > 1) {
       var qr = qrcode(0, 'H');
       qr.addData(url);
       qr.make();
-      qrDiv.innerHTML = qr.createImgTag(5, 10);
+      qrDiv.innerHTML = qr.createImgTag(5, 0);
       overlay.style.display = 'flex';
     });
   }
