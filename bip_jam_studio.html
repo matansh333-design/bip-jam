@@ -1136,10 +1136,16 @@
     background-position: right center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 32px 40px;
     box-sizing: border-box;
     overflow: hidden;
+  }
+  .welcome-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
   }
   .welcome-top {
     display: flex;
@@ -1276,6 +1282,17 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+  .welcome-jam-list.expanded {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .welcome-jam-list.expanded .welcome-jam-card {
+    flex: 1;
+    min-width: 0;
+  }
+  .welcome-jam-list.expanded .welcome-jam-thumb {
+    height: 70px;
   }
   .welcome-jam-card {
     display: flex;
@@ -1707,6 +1724,7 @@
     </div>
   </div>
 
+  <div class="welcome-content">
   <h1 class="welcome-heading">Welcome back!</h1>
   <p class="welcome-subtitle">Ready to create something awesome?</p>
 
@@ -1750,6 +1768,7 @@
       </div>
     </div>
   </div>
+  </div><!-- .welcome-content -->
 </div>
 
 <div id="rotate-overlay">
@@ -6013,11 +6032,25 @@ if (location.hash.length > 1) {
   document.querySelectorAll('.welcome-jam-open').forEach(function(btn) {
     btn.addEventListener('click', enterStudio);
   });
-  document.getElementById('welcome-view-all').addEventListener('click', function() {
-    document.querySelectorAll('.welcome-jam-card.hidden').forEach(function(c) {
-      c.classList.remove('hidden');
-    });
-    this.style.display = 'none';
+  var viewAllBtn = document.getElementById('welcome-view-all');
+  var jamList = document.querySelector('.welcome-jam-list');
+  viewAllBtn.addEventListener('click', function() {
+    var isExpanded = jamList.classList.contains('expanded');
+    if (isExpanded) {
+      // Collapse
+      jamList.classList.remove('expanded');
+      document.querySelectorAll('.welcome-jam-card').forEach(function(c, i) {
+        if (i > 0) c.classList.add('hidden');
+      });
+      viewAllBtn.textContent = 'View All';
+    } else {
+      // Expand
+      document.querySelectorAll('.welcome-jam-card.hidden').forEach(function(c) {
+        c.classList.remove('hidden');
+      });
+      jamList.classList.add('expanded');
+      viewAllBtn.textContent = 'Show Less';
+    }
   });
 })();
 
