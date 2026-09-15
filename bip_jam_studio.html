@@ -1125,6 +1125,177 @@
     text-align: center;
   }
 
+  /* ===== WELCOME SCREEN ===== */
+  #welcome-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 50000;
+    background-color: #4C5FD9;
+    background-image: radial-gradient(120% 140% at 30% 15%, #8FA0F7 0%, #6C7EEE 45%, #4C5FD9 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 32px 40px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  .welcome-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: none;
+  }
+  .welcome-logo {
+    height: 76px;
+    width: auto;
+    object-fit: contain;
+  }
+  .welcome-top-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .welcome-top-actions .tbar-circle-btn {
+    width: 40px;
+    height: 40px;
+  }
+  .welcome-heading {
+    font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
+    font-size: 60px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 24px 0 0;
+    line-height: 1.1;
+  }
+  .welcome-subtitle {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 12px 0 32px;
+    line-height: 1.5;
+  }
+  .welcome-cards {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    align-items: stretch;
+    min-height: 0;
+  }
+  .welcome-card {
+    background: #ffffff;
+    border-radius: 25px;
+    box-shadow:
+      0px 3.9px 3.1px 3.3px rgba(0,0,0,0.11),
+      inset 0.5px -7.1px 1.8px 0px rgba(0,0,0,0.26);
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .welcome-new {
+    width: 280px;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .welcome-new:active { opacity: 0.8; }
+  .welcome-new-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #6220f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .welcome-new-title {
+    font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
+    font-size: 33px;
+    font-weight: 700;
+    color: #6220f9;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .welcome-new-desc {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #383838;
+    text-align: center;
+  }
+  .welcome-continue {
+    flex: 1;
+    min-width: 0;
+  }
+  .welcome-continue-title {
+    font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #6220f9;
+    margin: 0 0 16px;
+  }
+  .welcome-jam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .welcome-jam-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    border-radius: 16px;
+    background: #f4f3fd;
+  }
+  .welcome-jam-thumb {
+    width: 111px;
+    height: 80px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8FA0F7 0%, #4C5FD9 100%);
+    flex: none;
+  }
+  .welcome-jam-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .welcome-jam-name {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #383838;
+  }
+  .welcome-jam-meta {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #383838;
+    display: flex;
+    gap: 12px;
+  }
+  .welcome-jam-open {
+    background: #6220f9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 20px;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    flex: none;
+    transition: opacity 0.15s;
+  }
+  .welcome-jam-open:active { opacity: 0.7; }
+
   /* ===== ROTATE PHONE OVERLAY ===== */
   #rotate-overlay {
     display: none;
@@ -1492,6 +1663,60 @@
     }
   }
 </style>
+
+<!-- ===== WELCOME SCREEN ===== -->
+<div id="welcome-screen">
+  <div class="welcome-top">
+    <img class="welcome-logo" src="assets/ui/logo.svg" alt="bip/jam" />
+    <div class="welcome-top-actions">
+      <button class="tbar-circle-btn" aria-label="Help">
+        <img src="assets/ui/help-icon.png" alt="?" style="width:20px;height:20px;object-fit:contain;" />
+      </button>
+      <button class="tbar-circle-btn" aria-label="Back">
+        <img src="assets/ui/back-icon.png" alt="&larr;" style="width:20px;height:20px;object-fit:contain;" />
+      </button>
+    </div>
+  </div>
+
+  <h1 class="welcome-heading">Welcome back!</h1>
+  <p class="welcome-subtitle">Ready to create something awesome?</p>
+
+  <div class="welcome-cards">
+    <div class="welcome-card welcome-new" id="welcome-new-jam">
+      <div class="welcome-new-btn">+</div>
+      <div class="welcome-new-title">Create New Jam</div>
+      <div class="welcome-new-desc">Start fresh and build something amazing</div>
+    </div>
+
+    <div class="welcome-card welcome-continue">
+      <div class="welcome-continue-title">Continue</div>
+      <div class="welcome-jam-list">
+        <div class="welcome-jam-card">
+          <div class="welcome-jam-thumb"></div>
+          <div class="welcome-jam-info">
+            <span class="welcome-jam-name">My First Jam</span>
+            <div class="welcome-jam-meta">
+              <span>120 BPM</span>
+              <span>Edited 3d ago</span>
+            </div>
+          </div>
+          <button class="welcome-jam-open">Open</button>
+        </div>
+        <div class="welcome-jam-card">
+          <div class="welcome-jam-thumb"></div>
+          <div class="welcome-jam-info">
+            <span class="welcome-jam-name">Beach Vibes</span>
+            <div class="welcome-jam-meta">
+              <span>140 BPM</span>
+              <span>Edited 1w ago</span>
+            </div>
+          </div>
+          <button class="welcome-jam-open">Open</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="rotate-overlay">
   <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -5738,6 +5963,23 @@ if (location.hash.length > 1) {
     if (isViewOnly) enableViewOnly();
   });
 }
+
+// ===== WELCOME SCREEN =====
+(function() {
+  var ws = document.getElementById('welcome-screen');
+  // Skip welcome screen if loading from hash (view-only or shared link)
+  if (location.hash.length > 1) {
+    ws.style.display = 'none';
+    return;
+  }
+  function enterStudio() {
+    ws.style.display = 'none';
+  }
+  document.getElementById('welcome-new-jam').addEventListener('click', enterStudio);
+  document.querySelectorAll('.welcome-jam-open').forEach(function(btn) {
+    btn.addEventListener('click', enterStudio);
+  });
+})();
 
 // ===== QR MODAL (Send to me) =====
 (function() {
