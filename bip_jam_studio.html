@@ -1087,13 +1087,22 @@
   .bottom-panel.effects-mode .panel-browser { display: none; }
   .bottom-panel.effects-mode .panel-effects { display: flex; }
   .bottom-panel.effects-mode .panel-toggle  { opacity: 0.3; pointer-events: none; }
-  .panel-effects-label {
+  .panel-effects-label, .panel-instrument-label {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
     font-size: 16px;
     font-weight: 700;
     color: #6220f9;
     opacity: 0.6;
   }
+  .panel-instrument {
+    display: none;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+  .bottom-panel.instrument-mode .panel-browser { display: none; }
+  .bottom-panel.instrument-mode .panel-instrument { display: flex; }
+  .bottom-panel.instrument-mode .panel-toggle  { opacity: 0.3; pointer-events: none; }
 
   .style-card {
     display: flex;
@@ -2285,6 +2294,11 @@
   <!-- Effects (Coming soon) -->
   <div class="panel-effects" id="panel-effects">
     <span class="panel-effects-label">Coming soon</span>
+  </div>
+
+  <!-- Instruments (Coming soon) -->
+  <div class="panel-instrument" id="panel-instrument">
+    <span class="panel-instrument-label">Coming soon</span>
   </div>
 
   <!-- State 2: Timeline Editor -->
@@ -5123,19 +5137,32 @@ function ensureAudio() {
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
+// Global master gain node — created once, volume slider controls it
+let _masterGain = null;
+function getMasterOut() {
+  if (!audioCtx) return null;
+  if (!_masterGain) {
+    _masterGain = audioCtx.createGain();
+    _masterGain.connect(audioCtx.destination);
+  }
+  return _masterGain;
+}
+
 function playElementSound(typeKey) {
   const buffer = elementAudioBuffers[typeKey];
   if (!audioCtx || !buffer) return;
+  const out = getMasterOut();
   const src = audioCtx.createBufferSource();
   src.buffer = buffer;
   const gain = audioCtx.createGain();
   gain.gain.value = 0.85;
   src.connect(gain);
-  gain.connect(audioCtx.destination);
-  src.start(0, ELEMENT_TYPES[typeKey].audioOffset); // skip the near-silent lead-in baked into the sample
+  gain.connect(out);
+  src.start(0, ELEMENT_TYPES[typeKey].audioOffset);
 }
 function playClick(accent) {
   if (!audioCtx) return;
+  const out = getMasterOut();
   const now = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
@@ -5144,7 +5171,7 @@ function playClick(accent) {
   gain.gain.setValueAtTime(accent ? 0.22 : 0.14, now);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
   osc.connect(gain);
-  gain.connect(audioCtx.destination);
+  gain.connect(out);
   osc.start(now);
   osc.stop(now + 0.1);
 }
@@ -5476,15 +5503,8 @@ setTimeout(() => loadingEl.remove(), 400);
     pitch: { pct: 50,     fill: document.getElementById('tweak-pitch-fill'), thumb: document.getElementById('tweak-pitch-thumb'), label: document.getElementById('tweak-pitch-pct') },
   };
 
-  let masterGain = null;
-
   function ensureMasterGain() {
-    if (!audioCtx || masterGain) return;
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = sliders.vol.pct / 100;
-    // Re-route: we can't retroactively patch existing nodes, but future sounds
-    // will go through masterGain. We patch playElementSound and playClick below.
-    masterGain.connect(audioCtx.destination);
+    getMasterOut(); // ensure _masterGain exists
   }
 
   function applySlider(id, pct) {
@@ -5500,7 +5520,7 @@ setTimeout(() => loadingEl.remove(), 400);
     }
     if (id === 'vol') {
       ensureMasterGain();
-      if (masterGain) masterGain.gain.value = s.pct / 100;
+      if (_masterGain) _masterGain.gain.value = s.pct / 100;
     }
   }
 
@@ -5630,6 +5650,7 @@ function applyTileStyle(idx) {
       // Toggle mode on the bottom panel
       bottomPanel.classList.toggle('style-mode', item.dataset.tab === 'style');
       bottomPanel.classList.toggle('effects-mode', item.dataset.tab === 'effects');
+      bottomPanel.classList.toggle('instrument-mode', item.dataset.tab === 'instrument');
     });
   });
 
