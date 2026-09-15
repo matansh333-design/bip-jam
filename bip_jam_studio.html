@@ -6230,18 +6230,46 @@ if (location.hash.length > 1) {
 // ===== HELP POPUP =====
 (function() {
   var ov = document.getElementById('help-popup-overlay');
-  function show() { ov.style.display = 'flex'; }
+  var closeBtn = document.getElementById('help-popup-close');
+  var ctaBtn = document.getElementById('help-popup-cta');
+
+  function showForEntry() {
+    closeBtn.style.display = 'none';
+    ctaBtn.style.display = '';
+    ov.querySelector('#help-popup-card').style.paddingTop = '28px';
+    ov.style.display = 'flex';
+  }
+  function showForHelp() {
+    closeBtn.style.display = '';
+    ctaBtn.style.display = 'none';
+    ov.querySelector('#help-popup-card').style.paddingTop = '42px';
+    ov.style.display = 'flex';
+  }
   function hide() { ov.style.display = 'none'; }
-  document.getElementById('help-popup-close').addEventListener('click', hide);
-  document.getElementById('help-popup-cta').addEventListener('click', hide);
+
+  closeBtn.addEventListener('click', hide);
+  ctaBtn.addEventListener('click', hide);
   ov.addEventListener('click', function(e) { if (e.target === ov) hide(); });
-  document.getElementById('tbar-help-btn').addEventListener('click', show);
-  // First entry: show after clicking Create New Jam
-  if (!viewOnly && location.hash.length <= 1 && !localStorage.getItem('bipjam_helped')) {
+
+  // Help button in studio
+  document.getElementById('tbar-help-btn').addEventListener('click', showForHelp);
+
+  // Every Create New Jam click: reset scene + show onboarding
+  if (!viewOnly && location.hash.length <= 1) {
     var newBtn = document.getElementById('welcome-new-jam');
     if (newBtn) {
       newBtn.addEventListener('click', function() {
-        setTimeout(function() { show(); localStorage.setItem('bipjam_helped', '1'); }, 300);
+        // Reset to empty jam
+        placedElements.forEach(function(el) { scene.remove(el.group); });
+        placedElements.length = 0;
+        numBars = 4;
+        GRID_COLS = numBars * 4;
+        bpm = 120;
+        document.getElementById('bipjam-bpm-label').textContent = bpm;
+        rebuildScene(true);
+        applyTileStyle(0);
+        if (typeof buildSeqGrid === 'function') buildSeqGrid();
+        setTimeout(showForEntry, 300);
       });
     }
   }
