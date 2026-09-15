@@ -5084,10 +5084,12 @@ let bpm = 120;
 let isPlaying = false;
 let playheadCol = -1;
 let lastStepAt = 0;
-let nextStepAudioTime = 0; // audioCtx.currentTime of the next scheduled step
+let playStartAudioTime = 0; // audioCtx.currentTime when playback started
+let scheduledInstrumentSources = []; // active BufferSource nodes for cleanup
 
 function stepDurationMs() { return 60000 / bpm; } // each column IS a quarter note
 function stepDurationSec() { return 60 / bpm; }
+function barDurationSec() { return stepDurationSec() * BAR_SIZE; }
 
 // ---------- audio: metronome click (synthesized) + per-element samples ----------
 let audioCtx = null;
@@ -5181,12 +5183,11 @@ function loadInstrumentAudio() {
   });
 }
 
-function playInstrumentPhrase(typeKey, barIndex, atTime) {
+function scheduleInstrumentPhrase(typeKey, barIndex, atTime) {
   if (!audioCtx) return;
   const theme = TILE_STYLES[currentTileStyleIdx].name.toLowerCase();
   const buffers = instrumentBuffers[typeKey];
   if (!buffers) return;
-  // Try current theme, fall back to green
   const buf = (buffers[theme] && buffers[theme][barIndex]) || (buffers.green && buffers.green[barIndex]);
   if (!buf) return;
   const src = audioCtx.createBufferSource();
@@ -5196,7 +5197,32 @@ function playInstrumentPhrase(typeKey, barIndex, atTime) {
   gain.gain.value = 0.85;
   src.connect(gain);
   gain.connect(audioCtx.destination);
-  src.start(atTime || 0);
+  src.start(atTime);
+  scheduledInstrumentSources.push(src);
+  src.onended = function() {
+    const i = scheduledInstrumentSources.indexOf(src);
+    if (i >= 0) scheduledInstrumentSources.splice(i, 1);
+  };
+}
+
+function scheduleAllInstruments(startTime) {
+  // Cancel any previously scheduled sources
+  cancelScheduledInstruments();
+  const numBarsTotal = Math.floor(GRID_COLS / BAR_SIZE);
+  const barDur = barDurationSec();
+  placedElements.forEach(el => {
+    const type = ELEMENT_TYPES[el.type];
+    if (!type || !type.isInstrument) return;
+    const elCol = el.tileIndex % GRID_COLS;
+    const elBar = Math.floor(elCol / BAR_SIZE);
+    const barStart = startTime + elBar * barDur;
+    scheduleInstrumentPhrase(el.type, elBar, barStart);
+  });
+}
+
+function cancelScheduledInstruments() {
+  scheduledInstrumentSources.forEach(src => { try { src.stop(); } catch(e) {} });
+  scheduledInstrumentSources = [];
 }
 
 function setColumnHighlight(col, on) {
@@ -5204,22 +5230,24 @@ function setColumnHighlight(col, on) {
 }
 
 function advancePlayhead() {
+  var prevCol = playheadCol;
   if (playheadCol >= 0) setColumnHighlight(playheadCol, false);
   playheadCol = (playheadCol + 1) % GRID_COLS;
   setColumnHighlight(playheadCol, true);
-  // Schedule this step at precise audio time
-  var stepTime = nextStepAudioTime;
-  nextStepAudioTime += stepDurationSec();
   playClick(playheadCol % BAR_SIZE === 0);
-  const currentBar = Math.floor(playheadCol / BAR_SIZE);
+  // Re-schedule all instruments when loop wraps back to start
+  if (playheadCol === 0 && prevCol >= 0 && audioCtx) {
+    var loopStart = audioCtx.currentTime;
+    scheduleAllInstruments(loopStart);
+  }
+  // Trigger regular (non-instrument) element sounds
   placedElements.forEach(el => {
     const elCol = el.tileIndex % GRID_COLS;
     const type = ELEMENT_TYPES[el.type];
     if (type && type.isInstrument) {
-      // Instruments: trigger when playhead enters the bar the instrument is in
-      if (playheadCol % BAR_SIZE === 0 && Math.floor(elCol / BAR_SIZE) === currentBar) {
+      // Visual hit feedback on bar start
+      if (playheadCol % BAR_SIZE === 0 && Math.floor(elCol / BAR_SIZE) === Math.floor(playheadCol / BAR_SIZE)) {
         el.hitAt = performance.now();
-        playInstrumentPhrase(el.type, currentBar, stepTime);
       }
     } else if (elCol === playheadCol) {
       el.hitAt = performance.now();
@@ -5232,6 +5260,7 @@ function advancePlayhead() {
 
 function stopPlayback() {
   isPlaying = false;
+  cancelScheduledInstruments();
   playIcon.style.display = '';
   pauseIcon.style.display = 'none';
   document.getElementById('bipjam-play-btn').classList.remove('is-playing');
@@ -5257,7 +5286,9 @@ function startPlayback() {
   document.querySelector('.tbar-play-circle').src = 'assets/ui/stop-icon.svg';
   lastStepAt = performance.now();
   playheadCol = -1;
-  nextStepAudioTime = audioCtx ? audioCtx.currentTime : 0;
+  playStartAudioTime = audioCtx ? audioCtx.currentTime : 0;
+  // Pre-schedule all instrument phrases for the entire first loop
+  if (audioCtx) scheduleAllInstruments(playStartAudioTime);
   advancePlayhead();
 }
 
