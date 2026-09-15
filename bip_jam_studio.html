@@ -1125,6 +1125,86 @@
     text-align: center;
   }
 
+  /* ===== HELP POPUP ===== */
+  #help-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 80000;
+    background: rgba(0,0,0,0.45);
+    align-items: center;
+    justify-content: center;
+  }
+  #help-popup-card {
+    background: #ffffff;
+    border-radius: 25px;
+    padding: 28px 28px 24px;
+    box-shadow:
+      0px 3.9px 3.1px 3.3px rgba(0,0,0,0.11),
+      inset 0.5px -7.1px 1.8px 0px rgba(0,0,0,0.26);
+    position: relative;
+    max-width: 480px;
+    width: 88%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+  #help-popup-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    border: none;
+    background: none;
+    font-size: 22px;
+    color: #6220f9;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    line-height: 1;
+    padding: 0;
+  }
+  #help-popup-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    background: #f4f3fd;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #help-popup-media img,
+  #help-popup-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+  #help-popup-text {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #313131;
+    line-height: 1.6;
+    text-align: center;
+  }
+  #help-popup-cta {
+    align-self: center;
+    background: #ffb700;
+    color: #1a0800;
+    border: none;
+    border-radius: 25px;
+    padding: 11px 34px;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+    transition: opacity 0.15s;
+  }
+  #help-popup-cta:active { opacity: 0.8; }
+
   /* ===== WELCOME SCREEN ===== */
   #welcome-screen {
     position: fixed;
@@ -1824,6 +1904,20 @@
     </div>
   </div>
   </div><!-- .welcome-content -->
+</div>
+
+<div id="help-popup-overlay">
+  <div id="help-popup-card">
+    <button id="help-popup-close">&times;</button>
+    <div id="help-popup-media">
+      <!-- replace with <img src="..."> or <video src="..." autoplay loop muted playsinline> -->
+    </div>
+    <div id="help-popup-text">
+      Drag elements onto the board to build a beat<br>
+      Hit play and shape your groove
+    </div>
+    <button id="help-popup-cta">Let's jam!</button>
+  </div>
 </div>
 
 <div id="leave-overlay">
@@ -6131,6 +6225,26 @@ if (location.hash.length > 1) {
       viewAllBtn.textContent = 'Show Less';
     }
   });
+})();
+
+// ===== HELP POPUP =====
+(function() {
+  var ov = document.getElementById('help-popup-overlay');
+  function show() { ov.style.display = 'flex'; }
+  function hide() { ov.style.display = 'none'; }
+  document.getElementById('help-popup-close').addEventListener('click', hide);
+  document.getElementById('help-popup-cta').addEventListener('click', hide);
+  ov.addEventListener('click', function(e) { if (e.target === ov) hide(); });
+  document.getElementById('tbar-help-btn').addEventListener('click', show);
+  // First entry: show after clicking Create New Jam
+  if (!viewOnly && location.hash.length <= 1 && !localStorage.getItem('bipjam_helped')) {
+    var newBtn = document.getElementById('welcome-new-jam');
+    if (newBtn) {
+      newBtn.addEventListener('click', function() {
+        setTimeout(function() { show(); localStorage.setItem('bipjam_helped', '1'); }, 300);
+      });
+    }
+  }
 })();
 
 // ===== LEAVE CONFIRMATION =====
