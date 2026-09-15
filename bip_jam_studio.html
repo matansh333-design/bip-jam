@@ -1125,6 +1125,101 @@
     text-align: center;
   }
 
+  /* ===== HELP / ONBOARDING POPUP ===== */
+  #help-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 80000;
+    background: rgba(0,0,0,0.45);
+    align-items: center;
+    justify-content: center;
+  }
+  .help-card {
+    background: #6220f9;
+    border-radius: 30px;
+    padding: 32px 36px 28px;
+    box-shadow: 0px 4.6px 3.7px 3.9px rgba(0,0,0,0.11), inset 0.56px -8.5px 2.1px rgba(0,0,0,0.26);
+    position: relative;
+    max-width: 600px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .help-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    padding: 0;
+  }
+  .help-close:active { color: #fff; }
+  .help-steps {
+    display: flex;
+    gap: 24px;
+  }
+  .help-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+  .help-step-media {
+    width: 100%;
+    height: 140px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .help-step-media img,
+  .help-step-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+  }
+  .help-step-title {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+  }
+  .help-step-desc {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+  }
+  .help-cta {
+    align-self: center;
+    background: #ffb700;
+    color: #1a0800;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 36px;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+    transition: opacity 0.15s;
+  }
+  .help-cta:active { opacity: 0.8; }
+
   /* ===== WELCOME SCREEN ===== */
   #welcome-screen {
     position: fixed;
@@ -1824,6 +1919,30 @@
     </div>
   </div>
   </div><!-- .welcome-content -->
+</div>
+
+<!-- ===== HELP / ONBOARDING POPUP ===== -->
+<div id="help-overlay">
+  <div class="help-card">
+    <button class="help-close" id="help-close">&times;</button>
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-media" id="help-media-1">
+          <!-- placeholder: replace with <img> or <video> -->
+        </div>
+        <div class="help-step-title">Drag elements onto the board</div>
+        <div class="help-step-desc">Each one plays a sound</div>
+      </div>
+      <div class="help-step">
+        <div class="help-step-media" id="help-media-2">
+          <!-- placeholder: replace with <img> or <video> -->
+        </div>
+        <div class="help-step-title">Hit play and shape your groove</div>
+        <div class="help-step-desc">Tempo, volume, pitch and more</div>
+      </div>
+    </div>
+    <button class="help-cta" id="help-cta">Let's jam!</button>
+  </div>
 </div>
 
 <div id="leave-overlay">
@@ -6131,6 +6250,34 @@ if (location.hash.length > 1) {
       viewAllBtn.textContent = 'Show Less';
     }
   });
+})();
+
+// ===== HELP / ONBOARDING POPUP =====
+(function() {
+  var helpOverlay = document.getElementById('help-overlay');
+  function showHelp() { helpOverlay.style.display = 'flex'; }
+  function hideHelp() { helpOverlay.style.display = 'none'; }
+
+  document.getElementById('help-close').addEventListener('click', hideHelp);
+  document.getElementById('help-cta').addEventListener('click', hideHelp);
+  helpOverlay.addEventListener('click', function(e) { if (e.target === helpOverlay) hideHelp(); });
+
+  // Help button in studio
+  document.getElementById('tbar-help-btn').addEventListener('click', showHelp);
+
+  // Show on first studio entry (not view-only, not hash-loaded)
+  if (!viewOnly && location.hash.length <= 1 && !localStorage.getItem('bipjam_seen_help')) {
+    // Hook into welcome screen "enter studio" flow
+    var origEnter = document.getElementById('welcome-new-jam');
+    if (origEnter) {
+      origEnter.addEventListener('click', function() {
+        setTimeout(function() {
+          showHelp();
+          localStorage.setItem('bipjam_seen_help', '1');
+        }, 300);
+      });
+    }
+  }
 })();
 
 // ===== LEAVE CONFIRMATION =====
