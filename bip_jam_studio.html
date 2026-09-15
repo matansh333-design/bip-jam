@@ -1162,20 +1162,9 @@
     padding: 0;
   }
   .help-close:active { color: #fff; }
-  .help-steps {
-    display: flex;
-    gap: 24px;
-  }
-  .help-step {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 0;
-  }
-  .help-step-media {
+  .help-media {
     width: 100%;
-    height: 140px;
+    height: 220px;
     border-radius: 14px;
     background: rgba(255,255,255,0.12);
     overflow: hidden;
@@ -1183,26 +1172,20 @@
     align-items: center;
     justify-content: center;
   }
-  .help-step-media img,
-  .help-step-media video {
+  .help-media img,
+  .help-media video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 14px;
   }
-  .help-step-title {
+  .help-text {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
     font-size: 15px;
     font-weight: 700;
     color: #ffffff;
-    line-height: 1.3;
-  }
-  .help-step-desc {
-    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.4;
+    line-height: 1.6;
+    text-align: center;
   }
   .help-cta {
     align-self: center;
@@ -1925,21 +1908,12 @@
 <div id="help-overlay">
   <div class="help-card">
     <button class="help-close" id="help-close">&times;</button>
-    <div class="help-steps">
-      <div class="help-step">
-        <div class="help-step-media" id="help-media-1">
-          <!-- placeholder: replace with <img> or <video> -->
-        </div>
-        <div class="help-step-title">Drag elements onto the board</div>
-        <div class="help-step-desc">Each one plays a sound</div>
-      </div>
-      <div class="help-step">
-        <div class="help-step-media" id="help-media-2">
-          <!-- placeholder: replace with <img> or <video> -->
-        </div>
-        <div class="help-step-title">Hit play and shape your groove</div>
-        <div class="help-step-desc">Tempo, volume, pitch and more</div>
-      </div>
+    <div class="help-media" id="help-media">
+      <!-- placeholder: replace with <img> or <video autoplay loop muted playsinline> -->
+    </div>
+    <div class="help-text">
+      Drag elements onto the board to build a beat<br>
+      Hit play and shape your groove
     </div>
     <button class="help-cta" id="help-cta">Let's jam!</button>
   </div>
