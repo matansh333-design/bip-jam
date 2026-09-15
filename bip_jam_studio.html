@@ -549,7 +549,7 @@
     padding: 0 16px 14px;
     flex: none;
   }
-  .sidebar-header-icon { flex: none; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+  .sidebar-header-icon { flex: none; height: 22px; width: auto; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
   .sidebar-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
     font-size: 26px;
@@ -1661,7 +1661,7 @@
 <div class="studio-sidebar" id="studio-sidebar">
   <!-- Header: music note icon + Studio label -->
   <div class="sidebar-header">
-    <img class="sidebar-header-icon" src="assets/ui/studio-icon.png" alt="" width="18" height="20" />
+    <img class="sidebar-header-icon" src="assets/ui/studio-icon.png" alt="" />
     <span class="sidebar-title">Studio</span>
   </div>
   <div class="sidebar-divider"></div>
@@ -1699,10 +1699,7 @@
     <span class="tbar-send-label">Send to me</span>
   </button>
   <button class="tbar-circle-btn" id="tbar-help-btn" aria-label="Help">
-    <!-- Question-mark glyph matching Figma purple #6220F9 -->
-    <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M5.25 14V12.25H6.75V14H5.25ZM6 0.5C3.515 0.5 1.5 2.515 1.5 5H3C3 3.343 4.343 2 6 2C7.657 2 9 3.343 9 5C9 5.916 8.572 6.732 7.9 7.264L6.8 8.113C6.294 8.512 6 9.127 6 9.75V10.5H7.5V9.75C7.5 9.45 7.634 9.173 7.864 8.989L8.964 8.14C9.943 7.363 10.5 6.23 10.5 5C10.5 2.515 8.485 0.5 6 0.5Z" fill="#6220F9"/>
-    </svg>
+    <img src="assets/ui/help-icon.png" alt="?" style="width:20px;height:20px;object-fit:contain;" />
   </button>
   <button class="tbar-circle-btn" id="tbar-gear-btn" aria-label="Settings">
     <!-- Gear icon — exact path from Figma, fill #6220F9 -->
