@@ -1131,7 +1131,9 @@
     inset: 0;
     z-index: 50000;
     background-color: #4C5FD9;
-    background-image: radial-gradient(120% 140% at 30% 15%, #8FA0F7 0%, #6C7EEE 45%, #4C5FD9 100%);
+    background-image: url('assets/ui/welcome-bg.png');
+    background-size: cover;
+    background-position: right center;
     display: flex;
     flex-direction: column;
     padding: 32px 40px;
@@ -1176,9 +1178,12 @@
   }
   .welcome-cards {
     display: flex;
-    gap: 24px;
+    flex-direction: column;
+    gap: 16px;
     flex: 1;
-    align-items: stretch;
+    width: 36%;
+    min-width: 320px;
+    max-width: 440px;
     min-height: 0;
   }
   .welcome-card {
@@ -1193,15 +1198,18 @@
     flex-direction: column;
   }
   .welcome-new {
-    width: 280px;
-    flex: none;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
     gap: 16px;
+    flex: none;
     cursor: pointer;
     transition: opacity 0.15s;
   }
   .welcome-new:active { opacity: 0.8; }
+  .welcome-new-text {
+    flex: 1;
+    min-width: 0;
+  }
   .welcome-new-btn {
     width: 50px;
     height: 50px;
@@ -1214,21 +1222,21 @@
     font-size: 28px;
     font-weight: 300;
     line-height: 1;
+    flex: none;
   }
   .welcome-new-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
-    font-size: 33px;
+    font-size: 26px;
     font-weight: 700;
     color: #6220f9;
-    text-align: center;
     line-height: 1.2;
   }
   .welcome-new-desc {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
     color: #383838;
-    text-align: center;
+    margin-top: 2px;
   }
   .welcome-continue {
     flex: 1;
@@ -1683,9 +1691,11 @@
 
   <div class="welcome-cards">
     <div class="welcome-card welcome-new" id="welcome-new-jam">
+      <div class="welcome-new-text">
+        <div class="welcome-new-title">Create New Jam</div>
+        <div class="welcome-new-desc">Start fresh and build something amazing</div>
+      </div>
       <div class="welcome-new-btn">+</div>
-      <div class="welcome-new-title">Create New Jam</div>
-      <div class="welcome-new-desc">Start fresh and build something amazing</div>
     </div>
 
     <div class="welcome-card welcome-continue">
