@@ -5203,7 +5203,7 @@ playBtn.addEventListener('click', () => {
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   isPlaying ? stopPlayback() : startPlayback();
 });
-bpmMinus.addEventListener('click', () => { bpm = Math.max(60, bpm - 4); bpmLabel.textContent = bpm; });
+bpmMinus.addEventListener('click', () => { bpm = Math.max(120, bpm - 4); bpmLabel.textContent = bpm; });
 bpmPlus.addEventListener('click',  () => { bpm = Math.min(200, bpm + 4); bpmLabel.textContent = bpm; });
 
 // New transport bar handlers
@@ -5468,8 +5468,8 @@ setTimeout(() => loadingEl.remove(), 400);
 // ===== TWEAK PANEL =====
 (function initTweakPanel() {
   // ---- Slider state ----
-  // BPM: maps pct 0-100 → bpm 60-200
-  const bpmPct = Math.round((bpm - 60) / 1.4);
+  // BPM: maps pct 0-100 → bpm 120-200
+  const bpmPct = Math.round((bpm - 120) / 0.8);
   const sliders = {
     bpm:   { pct: bpmPct, fill: document.getElementById('tweak-bpm-fill'),   thumb: document.getElementById('tweak-bpm-thumb'),   label: document.getElementById('tweak-bpm-pct') },
     vol:   { pct: 85,     fill: document.getElementById('tweak-vol-fill'),   thumb: document.getElementById('tweak-vol-thumb'),   label: document.getElementById('tweak-vol-pct') },
@@ -5495,7 +5495,7 @@ setTimeout(() => loadingEl.remove(), 400);
     s.label.textContent = s.pct + '%';
 
     if (id === 'bpm') {
-      bpm = Math.round(60 + s.pct * 1.4);
+      bpm = Math.round(120 + s.pct * 0.8);
       bpmLabel.textContent = bpm;
     }
     if (id === 'vol') {
@@ -5554,8 +5554,8 @@ setTimeout(() => loadingEl.remove(), 400);
   // Sync when the existing BPM ± buttons are used
   const origMinus = bpmMinus.onclick;
   const origPlus  = bpmPlus.onclick;
-  bpmMinus.addEventListener('click', () => applySlider('bpm', Math.round((bpm - 60) / 1.4)));
-  bpmPlus.addEventListener('click',  () => applySlider('bpm', Math.round((bpm - 60) / 1.4)));
+  bpmMinus.addEventListener('click', () => applySlider('bpm', Math.round((bpm - 120) / 0.8)));
+  bpmPlus.addEventListener('click',  () => applySlider('bpm', Math.round((bpm - 120) / 0.8)));
 
   // ---- Loop toggle ----
   const loopBg   = document.getElementById('tweak-loop-bg');
@@ -6165,7 +6165,7 @@ function loadState(str) {
     const b = Array.from(bin, c => c.charCodeAt(0));
     if (b[0] !== 1) return;       // unknown version
     const bars = b[1];
-    const tempo = b[2] + 60;
+    const tempo = Math.max(120, b[2] + 60);
     const styleIdx = b[3];
     const count = b[4];
 
