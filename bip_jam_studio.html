@@ -1343,6 +1343,65 @@
   }
   .welcome-jam-open:active { opacity: 0.7; }
 
+  /* ===== LEAVE CONFIRMATION POPUP ===== */
+  #leave-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 60000;
+    background: rgba(0,0,0,0.45);
+    align-items: center;
+    justify-content: center;
+  }
+  .leave-card {
+    background: #6220f9;
+    border-radius: 25px;
+    padding: 32px 36px;
+    text-align: center;
+    box-shadow: 0px 8px 32px rgba(0,0,0,0.3);
+    max-width: 340px;
+    width: 90%;
+  }
+  .leave-title {
+    font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px;
+  }
+  .leave-desc {
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.8);
+    margin: 0 0 24px;
+  }
+  .leave-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .leave-btn {
+    border: none;
+    border-radius: 25px;
+    padding: 10px 28px;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+  }
+  .leave-btn:active { opacity: 0.8; }
+  .leave-btn-stay {
+    background: #ffb700;
+    color: #1a0800;
+  }
+  .leave-btn-leave {
+    background: #ffffff;
+    color: #6220f9;
+  }
+
   /* ===== ROTATE PHONE OVERLAY ===== */
   #rotate-overlay {
     display: none;
@@ -1765,6 +1824,17 @@
     </div>
   </div>
   </div><!-- .welcome-content -->
+</div>
+
+<div id="leave-overlay">
+  <div class="leave-card">
+    <div class="leave-title">Leave this jam?</div>
+    <div class="leave-desc">Your progress will be here when you come back.</div>
+    <div class="leave-buttons">
+      <button class="leave-btn leave-btn-stay" id="leave-stay">Stay</button>
+      <button class="leave-btn leave-btn-leave" id="leave-confirm">Leave</button>
+    </div>
+  </div>
 </div>
 
 <div id="rotate-overlay">
@@ -6060,6 +6130,26 @@ if (location.hash.length > 1) {
       jamList.classList.add('expanded');
       viewAllBtn.textContent = 'Show Less';
     }
+  });
+})();
+
+// ===== LEAVE CONFIRMATION =====
+(function() {
+  var overlay = document.getElementById('leave-overlay');
+  var ws = document.getElementById('welcome-screen');
+  document.getElementById('tbar-gear-btn').addEventListener('click', function() {
+    overlay.style.display = 'flex';
+  });
+  document.getElementById('leave-stay').addEventListener('click', function() {
+    overlay.style.display = 'none';
+  });
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.style.display = 'none';
+  });
+  document.getElementById('leave-confirm').addEventListener('click', function() {
+    overlay.style.display = 'none';
+    if (isPlaying) stopPlayback();
+    ws.style.display = 'flex';
   });
 })();
 
