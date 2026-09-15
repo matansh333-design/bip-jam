@@ -1743,13 +1743,12 @@
         <button class="welcome-view-all" id="welcome-view-all">View All</button>
       </div>
       <div class="welcome-jam-list">
-        <div class="welcome-jam-card">
+        <div class="welcome-jam-card" data-hash="AQSMAiIACwILNAsGCzgLCgs8Cw4LPwsQCBEGMw0FBgQOMQ8UDzcPGQ8dDycRMhE7ER8RCREWDRsNDQ0-DQgNAwc2BzoHLQcwBw">
           <div class="welcome-jam-thumb"></div>
           <div class="welcome-jam-row">
             <span class="welcome-jam-name">My First Jam</span>
             <div class="welcome-jam-meta">
-              <span>Edited 3d ago</span>
-              <span>120 BPM</span>
+              <span>200 BPM</span>
             </div>
           </div>
           <button class="welcome-jam-open">Open</button>
@@ -6030,7 +6029,20 @@ if (location.hash.length > 1) {
   }
   document.getElementById('welcome-new-jam').addEventListener('click', enterStudio);
   document.querySelectorAll('.welcome-jam-open').forEach(function(btn) {
-    btn.addEventListener('click', enterStudio);
+    btn.addEventListener('click', function() {
+      var card = btn.closest('.welcome-jam-card');
+      var hash = card && card.dataset.hash;
+      if (hash) {
+        Promise.allSettled(
+          Object.values(ELEMENT_TYPES).map(function(t) { return t._loadPromise; }).filter(Boolean)
+        ).then(function() {
+          loadState(hash);
+          enterStudio();
+        });
+      } else {
+        enterStudio();
+      }
+    });
   });
   var viewAllBtn = document.getElementById('welcome-view-all');
   var jamList = document.querySelector('.welcome-jam-list');
