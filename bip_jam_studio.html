@@ -1132,13 +1132,13 @@
     z-index: 50000;
     background-color: #4C5FD9;
     background-image: url('assets/ui/welcome-bg.png');
-    background-size: cover;
+    background-size: 110%;
     background-position: right center;
     display: flex;
     flex-direction: column;
     padding: 32px 40px;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden;
   }
   .welcome-top {
     display: flex;
@@ -1165,21 +1165,23 @@
     font-size: 60px;
     font-weight: 700;
     color: #ffffff;
-    margin: 24px 0 0;
+    margin: 12px 0 0;
     line-height: 1.1;
+    flex: none;
   }
   .welcome-subtitle {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
     font-size: 21px;
     font-weight: 700;
     color: #ffffff;
-    margin: 12px 0 32px;
+    margin: 8px 0 16px;
     line-height: 1.5;
+    flex: none;
   }
   .welcome-cards {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     flex: 1;
     width: 36%;
     min-width: 320px;
@@ -1192,7 +1194,7 @@
     box-shadow:
       0px 3.9px 3.1px 3.3px rgba(0,0,0,0.11),
       inset 0.5px -7.1px 1.8px 0px rgba(0,0,0,0.26);
-    padding: 24px;
+    padding: 16px 18px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -1241,65 +1243,83 @@
   .welcome-continue {
     flex: 1;
     min-width: 0;
+    overflow: hidden;
+  }
+  .welcome-continue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
   }
   .welcome-continue-title {
     font-family: 'VVDS Fifties', 'Arial Black', system-ui, sans-serif;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: #6220f9;
-    margin: 0 0 16px;
+    margin: 0;
   }
+  .welcome-view-all {
+    background: #ebebff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6220f9;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .welcome-view-all:active { opacity: 0.7; }
   .welcome-jam-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   .welcome-jam-card {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px;
-    border-radius: 16px;
-    background: #f4f3fd;
+    flex-direction: column;
+    gap: 8px;
   }
+  .welcome-jam-card.hidden { display: none; }
   .welcome-jam-thumb {
-    width: 111px;
+    width: 100%;
     height: 80px;
     border-radius: 12px;
     background: linear-gradient(135deg, #8FA0F7 0%, #4C5FD9 100%);
     flex: none;
   }
-  .welcome-jam-info {
-    flex: 1;
+  .welcome-jam-row {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    justify-content: space-between;
   }
   .welcome-jam-name {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: #383838;
   }
   .welcome-jam-meta {
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 400;
-    color: #383838;
+    color: #888;
     display: flex;
-    gap: 12px;
+    gap: 8px;
   }
   .welcome-jam-open {
     background: #6220f9;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 8px 20px;
+    padding: 7px 0;
+    width: 100%;
     font-family: 'TeX Gyre Adventor', 'Josefin Sans', system-ui, sans-serif;
     font-size: 13px;
     font-weight: 400;
     cursor: pointer;
-    flex: none;
+    text-align: center;
     transition: opacity 0.15s;
   }
   .welcome-jam-open:active { opacity: 0.7; }
@@ -1699,26 +1719,29 @@
     </div>
 
     <div class="welcome-card welcome-continue">
-      <div class="welcome-continue-title">Continue</div>
+      <div class="welcome-continue-header">
+        <div class="welcome-continue-title">Continue</div>
+        <button class="welcome-view-all" id="welcome-view-all">View All</button>
+      </div>
       <div class="welcome-jam-list">
         <div class="welcome-jam-card">
           <div class="welcome-jam-thumb"></div>
-          <div class="welcome-jam-info">
+          <div class="welcome-jam-row">
             <span class="welcome-jam-name">My First Jam</span>
             <div class="welcome-jam-meta">
-              <span>120 BPM</span>
               <span>Edited 3d ago</span>
+              <span>120 BPM</span>
             </div>
           </div>
           <button class="welcome-jam-open">Open</button>
         </div>
-        <div class="welcome-jam-card">
+        <div class="welcome-jam-card hidden">
           <div class="welcome-jam-thumb"></div>
-          <div class="welcome-jam-info">
+          <div class="welcome-jam-row">
             <span class="welcome-jam-name">Beach Vibes</span>
             <div class="welcome-jam-meta">
-              <span>140 BPM</span>
               <span>Edited 1w ago</span>
+              <span>140 BPM</span>
             </div>
           </div>
           <button class="welcome-jam-open">Open</button>
@@ -5988,6 +6011,12 @@ if (location.hash.length > 1) {
   document.getElementById('welcome-new-jam').addEventListener('click', enterStudio);
   document.querySelectorAll('.welcome-jam-open').forEach(function(btn) {
     btn.addEventListener('click', enterStudio);
+  });
+  document.getElementById('welcome-view-all').addEventListener('click', function() {
+    document.querySelectorAll('.welcome-jam-card.hidden').forEach(function(c) {
+      c.classList.remove('hidden');
+    });
+    this.style.display = 'none';
   });
 })();
 
